@@ -10,3 +10,42 @@ renderTuning=function(){const visible=cars.filter(c=>(!filters.brand||c.brand===
 renderDetail=function(){const c=detailCar;if(!c){navigate('carRecommendation');return}const matched=c.tuningData.filter(t=>tuneMatches(t)&&(!detailTier||t.tier===detailTier));const list=detailOrigin==='carRecommendation'&&!showAll?matched:c.tuningData;$('#subcontent').innerHTML=`<section class="vehicle-masthead"><div class="vehicle-masthead-copy"><span class="eyebrow">${c.brand.toUpperCase()}</span><h2>${esc(c.name)}</h2><div class="masthead-meta"><span>${c.category}</span><span>${c.driveType}</span><b class="class-tag">${c.level}</b></div><button id="collectCar" class="save-button ${collected.has(c._id)?'saved':''}" aria-label="${collected.has(c._id)?'取消收藏':'收藏车辆'}">${collected.has(c._id)?'★ 已收藏':'☆ 收藏车辆'}</button><small>车辆与配图为演示内容</small></div><div class="masthead-car"><span class="masthead-number">${c.level}</span><img src="assets/cars/${c.image}" alt="${esc(c.name)} 演示配图"></div></section><div class="setup-layout"><aside class="spec-card"><span class="eyebrow">THE DETAILS</span><h3>认识这台车</h3><dl>${[['品牌',c.brand],['国家',c.country],['类别',c.category],['驱动',c.driveType],['获取方式',c.obtainMethod]].map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl><p>演示车辆数据，仅用于布局与交互预览。</p></aside><section><div class="detail-heading"><div><span class="eyebrow">FIND THE RIGHT FEEL</span><h2>调校推荐 <small>${list.length} 套方案</small></h2></div>${detailOrigin==='carRecommendation'&&matched.length<c.tuningData.length?`<button id="showAll">${showAll?'仅看匹配':'全部调校'} ${showAll?matched.length:c.tuningData.length} ↗</button>`:''}</div>${list.map(t=>`<article class="tune"><div class="tune-top"><div class="tags"><b class="tier-chip">${t.tier}</b><b class="level-${t.level}">${t.level}</b>${t.online?'<span class="online">线上竞速</span>':''}<span>${t.scenario}</span><span>${t.driveType}</span><span>${t.tireType}</span></div><button class="like ${liked.has(t.tuningId)?'liked':''}" data-like="${t.tuningId}">${liked.has(t.tuningId)?'♥':'♡'} ${t.likes+(liked.has(t.tuningId)?1:0)}</button></div><div class="tuner-row"><button class="tuner-profile" data-tuner="${t.tuner}"><span class="author-avatar">${t.tuner.split(' ')[1][0]}</span><span><small>调校师</small><strong>${t.tuner}</strong></span><span class="tuner-more">查看主页 ↗</span></button><button class="copy-tuner" data-copy="${t.tuner}">复制调校师 ID <span>⧉</span></button></div><p class="tune-desc"><span>调校简评</span>${t.description}</p></article>`).join('')||'<div class="placeholder">暂无匹配调校</div>'}</section></div>`;$('#collectCar').onclick=()=>{collected.has(c._id)?collected.delete(c._id):collected.add(c._id);saveCollect();renderDetail()};if($('#showAll'))$('#showAll').onclick=()=>{showAll=!showAll;renderDetail()};};
 // Give each secondary page its own web page heading through the same navigation.
 updateNick();
+
+// Header navigation uses disclosures so every destination remains a normal button.
+routeDescriptions.liveryCenter=['MAKE IT YOURS','涂装中心','为你的座驾，找到属于自己的风格。'];
+routeDescriptions.weeklyPhotos=['THROUGH THE LENS','每周相片','公路、风景与座驾，记录驾驶之外的瞬间。'];
+routeDescriptions.leagueStandings[1]='赛事中心';
+routeDescriptions.ranking[1]='创作者排行榜';
+const navigationGroups=[...document.querySelectorAll('.nav-group')];
+function closeNavigation(except=null){navigationGroups.forEach(group=>{if(group===except)return;group.querySelector('.nav-toggle').setAttribute('aria-expanded','false');group.querySelector('.nav-dropdown').hidden=true;});}
+navigationGroups.forEach(group=>{
+ const toggle=group.querySelector('.nav-toggle'),panel=group.querySelector('.nav-dropdown');
+ const open=()=>{closeNavigation(group);toggle.setAttribute('aria-expanded','true');panel.hidden=false;};
+ toggle.addEventListener('click',()=>{if(panel.hidden)open();else closeNavigation();});
+ group.addEventListener('focusout',event=>{if(!group.contains(event.relatedTarget))closeNavigation();});
+ group.addEventListener('keydown',event=>{
+  if(event.key==='Escape'){event.stopPropagation();event.preventDefault();closeNavigation();toggle.focus();return;}
+  if(!['ArrowDown','ArrowUp','Home','End'].includes(event.key))return;
+  event.preventDefault();const items=[...panel.querySelectorAll('button')];
+  if(event.target===toggle){open();items[event.key==='ArrowUp'?items.length-1:0].focus();return;}
+  const index=items.indexOf(document.activeElement);
+  items[event.key==='Home'?0:event.key==='End'?items.length-1:(index+(event.key==='ArrowDown'?1:-1)+items.length)%items.length].focus();
+ });
+});
+document.addEventListener('click',event=>{if(!event.target.closest('.nav-group')||event.target.closest('[data-route],[data-open-profile]'))closeNavigation();if(event.target.closest('[data-open-profile]'))drawer(true);});
+const renderExistingPage=render;
+render=function(){
+ if(currentRoute==='liveryCenter'){
+  $('#subcontent').innerHTML='<section class="placeholder livery-preview"><span class="eyebrow">LIVERY STUDIO</span><h2>给座驾一点自己的颜色</h2><p>涂装中心已设为独立入口。目前为界面预览，涂装作品与分享码尚未接入。</p><button data-route="carSelection">先逛逛全车辆库 →</button></section>';
+ }else if(currentRoute==='weeklyPhotos'){
+  $('#subcontent').innerHTML=`<div class="weekly-photo-grid">${[['seasonal-guide-bg-v2.jpg','公路之间'],['car-library-bg-v2.jpg','下一段旅程'],['blueprint-bg-v2.jpg','沿途风景']].map(([file,title],index)=>`<button class="weekly-photo" data-photo="assets/home/${file}"><img src="assets/home/${file}" alt="${title} · 演示相片"><span><small>PHOTO 0${index+1} · 演示相片</small><strong>${title}</strong><b>查看大图 ↗</b></span></button>`).join('')}</div>`;
+ }else renderExistingPage();
+};
+const navigateExistingPage=navigate;
+navigate=function(route,push=true){
+ closeNavigation();navigateExistingPage(route,push);
+ if(routeDescriptions[route])$('#pageTitle').textContent=routeDescriptions[route][1];
+ navigationGroups.forEach(group=>group.querySelector('.nav-toggle').classList.toggle('active',[...group.querySelectorAll('[data-route]')].some(item=>item.dataset.route===route)));
+ document.querySelectorAll('.primary-navigation [data-route]').forEach(button=>{if(button.dataset.route===route)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
+};
+document.querySelector('.primary-navigation [data-route=""]').setAttribute('aria-current','page');
