@@ -38,7 +38,7 @@ render=function(){
  if(currentRoute==='liveryCenter'){
   $('#subcontent').innerHTML='<section class="placeholder livery-preview"><span class="eyebrow">LIVERY STUDIO</span><h2>给座驾一点自己的颜色</h2><p>涂装中心已设为独立入口。目前为界面预览，涂装作品与分享码尚未接入。</p><button data-route="carSelection">先逛逛全车辆库 →</button></section>';
  }else if(currentRoute==='weeklyPhotos'){
-  $('#subcontent').innerHTML=`<div class="weekly-photo-grid">${[['seasonal-guide-bg-v2.jpg','公路之间'],['car-library-bg-v2.jpg','下一段旅程'],['blueprint-bg-v2.jpg','沿途风景']].map(([file,title],index)=>`<button class="weekly-photo" data-photo="assets/home/${file}"><img src="assets/home/${file}" alt="${title} · 演示相片"><span><small>PHOTO 0${index+1} · 演示相片</small><strong>${title}</strong><b>查看大图 ↗</b></span></button>`).join('')}</div>`;
+  renderAlbum();
  }else renderExistingPage();
 };
 const navigateExistingPage=navigate;
@@ -46,6 +46,64 @@ navigate=function(route,push=true){
  closeNavigation();navigateExistingPage(route,push);
  if(routeDescriptions[route])$('#pageTitle').textContent=routeDescriptions[route][1];
  navigationGroups.forEach(group=>group.querySelector('.nav-toggle').classList.toggle('active',[...group.querySelectorAll('[data-route]')].some(item=>item.dataset.route===route)));
- document.querySelectorAll('.primary-navigation [data-route]').forEach(button=>{if(button.dataset.route===route)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
+ document.querySelectorAll('.primary-navigation [data-route]').forEach(button=>{if(button.dataset.route===route&&(!button.dataset.tuningMode||button.dataset.tuningMode===mode))button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
+ if(!route)refreshHomeSaved();
 };
 document.querySelector('.primary-navigation [data-route=""]').setAttribute('aria-current','page');
+
+// Choose the tuning mode before app.js handles the destination click.
+document.addEventListener('click',event=>{const entry=event.target.closest('[data-tuning-mode]');if(entry){mode=entry.dataset.tuningMode;filters={brand:'',level:'',scenario:'',driveType:''};}},true);
+
+// Personal content lives on the homepage; the driver control retains profile editing.
+const formerDrawerSections=[...document.querySelectorAll('#drawer .drawer-body>section')];
+$('#homeLeague').append(formerDrawerSections[0]);
+$('#homeActivity').append(formerDrawerSections[1]);
+$('#homeBlueprint').append(formerDrawerSections[2]);
+$('#drawer .drawer-body').innerHTML='<section class="driver-profile-summary"><span class="eyebrow">YOUR DRIVER PROFILE</span><h3>我的车手档案</h3><p>记录你的代号，继续下一段旅程。</p><button id="editProfileName" class="copy-tuner">修改车手代号</button><button data-route="" class="profile-home-link">回到首页 · 收藏与推荐 →</button></section>';
+$('#editProfileName').onclick=editName;
+function refreshHomeSaved(){
+ const saved=cars.filter(car=>collected.has(car._id));
+ $('#homeSaved').innerHTML=saved.length?`<div class="saved-preview-list">${saved.slice(0,2).map(car=>`<button data-car="${car._id}"><img src="assets/cars/${car.image}" alt="${esc(car.name)}"><span><small>${car.brand}</small><strong>${esc(car.name)}</strong></span><b>↗</b></button>`).join('')}</div>`:'<div class="saved-empty"><span>♡</span><div><strong>下一台心仪座驾，留在这里。</strong><p>收藏车辆，回到首页就能接着看。</p><button data-route="carSelection">逛逛车辆库 →</button></div></div>';
+}
+refreshHomeSaved();
+
+routeDescriptions.weeklyPhotos[1]='玩家相册';
+const communityPhotos=[
+ {src:'assets/home/seasonal-guide-bg-v2.jpg',title:'公路之间',author:'演示相片',headline:'把你的地平线，<br>分享给所有人。'},
+ {src:'assets/home/car-library-bg-v2.jpg',title:'下一段旅程',author:'演示相片',headline:'一台车，一段路，<br>也是你的作品。'},
+ {src:'assets/home/blueprint-bg-v2.jpg',title:'沿途风景',author:'演示相片',headline:'不必追求最快，<br>也能留下精彩。'}
+];
+let featuredPhotoIndex=0,photoRotationPaused=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function showFeaturedPhoto(index){
+ featuredPhotoIndex=(index+communityPhotos.length)%communityPhotos.length;
+ const photo=communityPhotos[featuredPhotoIndex];
+ $('#featuredPhoto').src=photo.src;$('#featuredPhoto').alt=photo.title+' · '+photo.author;
+ $('#featuredPhotoTitle').innerHTML=photo.headline||esc(photo.title);
+ $('#featuredPhotoAuthor').textContent=photo.title+' · '+photo.author;
+ $('#photoCount').textContent=String(featuredPhotoIndex+1).padStart(2,'0')+' / '+String(communityPhotos.length).padStart(2,'0');
+ $('#photoDots').innerHTML=communityPhotos.map((item,i)=>`<button data-photo-index="${i}" aria-label="第 ${i+1} 张：${esc(item.title)}" aria-pressed="${i===featuredPhotoIndex}"></button>`).join('');
+}
+function updatePhotoRotationControl(){const button=$('#pausePhotos');button.textContent=photoRotationPaused?'▶':'Ⅱ';button.setAttribute('aria-label',photoRotationPaused?'播放轮播':'暂停轮播');button.setAttribute('aria-pressed',String(photoRotationPaused));}
+$('#previousPhoto').onclick=()=>showFeaturedPhoto(featuredPhotoIndex-1);
+$('#nextPhoto').onclick=()=>showFeaturedPhoto(featuredPhotoIndex+1);
+$('#pausePhotos').onclick=()=>{photoRotationPaused=!photoRotationPaused;updatePhotoRotationControl();};
+$('#heroHit').onclick=()=>{const photo=communityPhotos[featuredPhotoIndex];$('#photo img').src=photo.src;$('#photo img').alt=photo.title;$('#photo p').textContent=photo.title+' · '+photo.author;$('#photo').showModal();};
+$('.photo-feature').addEventListener('keydown',event=>{if(event.target!==event.currentTarget)return;if(['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();showFeaturedPhoto(featuredPhotoIndex+(event.key==='ArrowRight'?1:-1));}});
+setInterval(()=>{const feature=$('.photo-feature');if(!photoRotationPaused&&!currentRoute&&!document.hidden&&!feature.matches(':hover')&&!feature.contains(document.activeElement)&&!document.querySelector('dialog[open]'))showFeaturedPhoto(featuredPhotoIndex+1);},6000);
+function renderAlbum(){
+ $('#subcontent').innerHTML=`<div class="album-intro"><p>不必是调校师或赛道作者，一张相片也能成为社区的一部分。</p><button class="web-primary" data-submit-photo>投稿我的相片 ＋</button></div><div class="weekly-photo-grid">${communityPhotos.map((photo,index)=>`<button class="weekly-photo" data-album-photo="${index}"><img src="${photo.src}" alt="${esc(photo.title)}"><span><small>PHOTO ${String(index+1).padStart(2,'0')} · ${esc(photo.author)}</small><strong>${esc(photo.title)}</strong><b>查看大图 ↗</b></span></button>`).join('')}</div>`;
+}
+document.addEventListener('click',event=>{
+ const dot=event.target.closest('[data-photo-index]');if(dot)showFeaturedPhoto(Number(dot.dataset.photoIndex));
+ if(event.target.closest('[data-submit-photo]'))$('#photoSubmission').showModal();
+ const albumPhoto=event.target.closest('[data-album-photo]');if(albumPhoto){const photo=communityPhotos[Number(albumPhoto.dataset.albumPhoto)];$('#photo img').src=photo.src;$('#photo img').alt=photo.title;$('#photo p').textContent=photo.title+' · '+photo.author;$('#photo').showModal();}
+});
+$('#photoSubmissionForm').onsubmit=async event=>{
+ event.preventDefault();const file=$('#submissionFile').files[0],title=$('#submissionTitle').value.trim();if(!file||!title)return;
+ if(!file.type.startsWith('image/')){notify('请选择图片文件');return;}
+ const src=URL.createObjectURL(file),image=new Image();image.src=src;
+ try{await image.decode();}catch{URL.revokeObjectURL(src);notify('这张图片无法读取，请重新选择');return;}
+ communityPhotos.push({src,title,author:nick+' · 本地预览'});$('#photoSubmission').close();event.target.reset();showFeaturedPhoto(communityPhotos.length-1);
+ if(currentRoute==='weeklyPhotos')renderAlbum();else navigate('');notify('相片已加入本次页面预览');
+};
+showFeaturedPhoto(0);updatePhotoRotationControl();
