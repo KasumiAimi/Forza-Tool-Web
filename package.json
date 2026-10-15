@@ -1,0 +1,13 @@
+{
+  "name": "horizon-web-ui-preview",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Horizon 6 player-facing Web UI prototype with local demo data",
+  "scripts": {
+    "start": "node server.cjs",
+    "test": "node tests/check.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}
