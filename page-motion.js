@@ -22,9 +22,10 @@
   if(rect.bottom<0||rect.top>innerHeight||rect.width===0)return null;
   return {src:image.currentSrc,rect,padding:style.padding};
  }
- document.addEventListener('pointerdown',finishMotion,true);
  document.addEventListener('keydown',event=>{if(['Enter',' ','Escape','Tab'].includes(event.key))finishMotion();},true);
  document.addEventListener('click',event=>{
+  // Let pointerup target the same control before removing entrance transforms.
+  finishMotion();
   const card=event.target.closest('[data-car]');
   selectedImage=card?imageSnapshot(card.querySelector('img')):null;
  },true);

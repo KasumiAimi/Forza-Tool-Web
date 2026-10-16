@@ -16,9 +16,12 @@ homeTabs.innerHTML=[['tunings','本周热门调校'],['liveries','热门涂装']
 discover.querySelector('.web-section-heading').append(homeTabs);
 $('#homeCars').setAttribute('role','tabpanel');
 const rail=document.createElement('aside');rail.className='reference-profile-rail dashboard-card';rail.setAttribute('aria-label','个人收藏更新');
-rail.innerHTML='<div class="dashboard-card-heading"><h3>个人收藏更新</h3><button class="favorite-link" data-route="collection" aria-label="个人收藏">全部收藏 ↗</button></div><div id="referenceActivity"></div>';
+rail.innerHTML='<div class="dashboard-card-heading"><h3>个人收藏更新</h3></div><div id="referenceActivity"></div>';
+const personalSection=document.createElement('section');personalSection.className='reference-personal-section';personalSection.setAttribute('aria-labelledby','personalSectionTitle');
+personalSection.innerHTML='<div class="web-section-heading"><h2 id="personalSectionTitle">个人中心</h2><button class="text-link favorite-link" data-route="collection" aria-label="个人收藏">全部收藏 ↗</button></div>';
+personalSection.append(rail);
 const activity=$('#homeActivity');activity.querySelector('h3').remove();rail.querySelector('#referenceActivity').append(activity);
-mainColumn.append(featureRow);layout.append(mainColumn,rail,discover);homeMain.prepend(welcome,layout);
+mainColumn.append(featureRow);layout.append(mainColumn,personalSection,discover);homeMain.prepend(welcome,layout);
 $('.home-dashboard').hidden=true;$('.tool-strip').hidden=true;$('.community-section').hidden=true;
 $('.home-dashboard .favorite-link').classList.remove('favorite-link');
 
@@ -31,9 +34,19 @@ function renderReferenceRecommendations(){
  $('#homeCars').setAttribute('aria-labelledby','homeTab-'+selectedHomeTab);
  discover.querySelector('.text-link').dataset.route=selectedHomeTab==='liveries'?'liveryCenter':'carRecommendation';
  if(selectedHomeTab==='liveries'){$('#homeCars').innerHTML='<div class="reference-tab-empty placeholder"><span>✧</span><h3>为座驾，添一点自己的风格。</h3><p>涂装作品尚未接入，先看看涂装中心的布局。</p><button data-route="liveryCenter">进入涂装中心 ↗</button></div>';return;}
- const visible=cars.slice(0,3);
+ const visible=cars.slice(0,8);
  $('#homeCars').innerHTML=visible.length?visible.map(car=>'<div class="reference-car-card">'+card(car,'',true)+'</div>').join(''):'<div class="reference-tab-empty placeholder"><h3>收藏更新会出现在这里</h3><p>收藏一台车辆，再回来查看它的调校。</p><button data-route="carSelection">浏览车辆库 ↗</button></div>';
+ updateHomeRecommendationRows();requestAnimationFrame(updateHomeRecommendationRows);
 }
+function updateHomeRecommendationRows(){
+ const grid=$('#homeCars');if(!grid.getBoundingClientRect().width)return;
+ const columns=getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
+ const rows=matchMedia('(max-width:1100px)').matches?1:2;
+ grid.querySelectorAll('.reference-car-card').forEach((item,index)=>{item.hidden=index>=columns*rows;});
+}
+let recommendationWidth=-1;
+const recommendationResize=new ResizeObserver(entries=>{const width=entries[0].contentRect.width;if(Math.abs(width-recommendationWidth)>.5){recommendationWidth=width;updateHomeRecommendationRows();}});
+recommendationResize.observe($('#homeCars'));window.addEventListener('resize',updateHomeRecommendationRows);
 function refreshReferenceHome(){
  $('#welcomeDriverName').textContent=nick;
 

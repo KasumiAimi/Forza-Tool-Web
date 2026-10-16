@@ -24,7 +24,7 @@ navigationGroups.forEach(group=>{
  toggle.addEventListener('click',()=>{if(panel.hidden)open();else closeNavigation();});
  group.addEventListener('focusout',event=>{if(!group.contains(event.relatedTarget))closeNavigation();});
  group.addEventListener('keydown',event=>{
-  if(event.key==='Escape'){event.stopPropagation();event.preventDefault();closeNavigation();toggle.focus();return;}
+  if(event.key==='Escape'){if(panel.hidden)return;event.stopPropagation();event.preventDefault();closeNavigation();toggle.focus();return;}
   if(!['ArrowDown','ArrowUp','Home','End'].includes(event.key))return;
   event.preventDefault();const items=[...panel.querySelectorAll('button')];
   if(event.target===toggle){open();items[event.key==='ArrowUp'?items.length-1:0].focus();return;}
@@ -49,7 +49,7 @@ navigate=function(route,push=true){
  document.querySelectorAll('.primary-navigation [data-route]').forEach(button=>{if(button.dataset.route===route&&(!button.dataset.tuningMode||button.dataset.tuningMode===mode))button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
  if(!route)refreshHomeSaved();
 };
-document.querySelector('.primary-navigation [data-route=""]').setAttribute('aria-current','page');
+$('#logo').setAttribute('aria-current','page');
 
 // Choose the tuning mode before app.js handles the destination click.
 document.addEventListener('click',event=>{const entry=event.target.closest('[data-tuning-mode]');if(entry){mode=entry.dataset.tuningMode;filters={brand:'',level:'',scenario:'',driveType:''};}},true);

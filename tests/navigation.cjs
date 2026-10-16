@@ -1,5 +1,6 @@
 const {chromium}=require('playwright');
 const path=require('node:path'),assert=require('node:assert/strict');
+const {openHeader,headerRoute}=require('./header-helpers.cjs');
 (async()=>{
  const browser=await chromium.launch({headless:true,channel:'msedge'});
  try{
@@ -28,7 +29,8 @@ const path=require('node:path'),assert=require('node:assert/strict');
  assert.deepEqual(await page.evaluate(()=>({background:getComputedStyle(document.body).backgroundColor,header:getComputedStyle(document.querySelector('.site-header')).backgroundColor,font:getComputedStyle(document.body).fontFamily})),{background:'rgb(24, 24, 24)',header:'rgb(11, 11, 11)',font:'"Segoe UI", "Microsoft YaHei", sans-serif'});
  const nav=page.getByRole('navigation',{name:'主导航',exact:true});
  const tuning=nav.locator('[aria-controls="tuningMenu"]');
- assert.equal(await nav.locator('#communityMenu').count(),0);
+ assert.equal(await nav.locator('#communityMenu').count(),1);
+ assert.equal(await nav.locator('[data-route=""]').count(),0,'brand is the only homepage header entry');
  assert.equal(await nav.getByRole('button',{name:'个人中心',exact:true}).count(),0);
  for(const name of ['全车辆库','涂装中心','赛事中心','游戏攻略']){
   await nav.getByRole('button',{name,exact:true}).click();assert.equal(await page.locator('#pageTitle').textContent(),name);
@@ -38,16 +40,16 @@ const path=require('node:path'),assert=require('node:assert/strict');
   assert.equal(await page.locator('.web-modebar .tabs .active').textContent(),modeText);
   assert.equal(await nav.locator('.nav-toggle[aria-expanded="true"]').count(),0);
  }
- for(const [name,title] of [['蓝图','蓝图推荐'],['相册','玩家相册'],['游戏攻略','游戏攻略']]){
-  await nav.getByRole('button',{name,exact:true}).click();assert.equal(await page.locator('#pageTitle').textContent(),title);
+ for(const [route,title] of [['blueprintRecommendation','蓝图推荐'],['weeklyPhotos','玩家相册'],['ranking','创作者排行榜'],['gameGuide','游戏攻略']]){
+  await headerRoute(page,route);assert.equal(await page.locator('#pageTitle').textContent(),title);
  }
  await page.locator('#control').click();await page.locator('#drawer.open').waitFor();
  assert.equal(await page.locator('#drawer .poster').count(),0);await page.locator('#closeDrawer').click();
  await tuning.press('ArrowDown');assert.match(await page.locator(':focus').textContent(),/线上推荐/);
  await page.locator(':focus').press('ArrowDown');assert.match(await page.locator(':focus').textContent(),/漂移/);
  await page.locator(':focus').press('Escape');assert.equal(await tuning.getAttribute('aria-expanded'),'false');
- await tuning.click();await nav.getByRole('button',{name:'蓝图',exact:true}).click();assert.equal(await tuning.getAttribute('aria-expanded'),'false');
- await tuning.click();await page.locator('#pageTitle').click();assert.equal(await tuning.getAttribute('aria-expanded'),'false');
+ await tuning.click();await headerRoute(page,'blueprintRecommendation');assert.equal(await tuning.getAttribute('aria-expanded'),'false');
+ await tuning.click();await page.locator('.site-footer>small').click();assert.equal(await tuning.getAttribute('aria-expanded'),'false');
  await page.locator('#logo').click();
  await page.locator('#pausePhotos').click();const first=await page.locator('#featuredPhoto').getAttribute('src');
  await page.locator('#nextPhoto').click();assert.notEqual(await page.locator('#featuredPhoto').getAttribute('src'),first);
@@ -59,14 +61,16 @@ const path=require('node:path'),assert=require('node:assert/strict');
  await page.locator('#submissionTitle').fill('测试相片');await page.getByRole('button',{name:'预览上墙',exact:true}).click();
  await page.locator('#photoSubmission').waitFor({state:'hidden'});
  assert.equal(await page.locator('#featuredPhotoTitle').textContent(),'测试相片');assert.match(await page.locator('#photoCount').textContent(),/04 \/ 04/);
- assert.equal(await page.locator('#homeLeague #poster').count(),1);assert.equal(await page.locator('#homeActivity .drawer-update').count(),1);
+ assert.equal(await page.locator('#homeLeague #poster').count(),1);assert.equal(await page.locator('#homeActivity .drawer-update').count(),0);assert.match(await page.locator('#homeActivity .activity-empty').textContent(),/最近 7 天暂无调校更新/);
  await page.locator('[data-photo-index="0"]').click();
  await page.screenshot({path:path.join(__dirname,'首页-摄影主体-Web.png'),fullPage:true});
  for(const width of [1024,768,390]){
   await page.setViewportSize({width,height:900});
   for(const group of [tuning]){
+   await openHeader(page);
    await group.click();const box=await nav.locator('.nav-dropdown:not([hidden])').boundingBox();assert(box.x>=0&&box.x+box.width<=width,`dropdown overflow ${width}`);await group.click();
   }
+  if(await page.locator('#navigationToggle').getAttribute('aria-expanded')==='true')await page.locator('#navigationToggle').click();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`page overflow ${width}`);
  }
  await page.screenshot({path:path.join(__dirname,'首页-摄影主体-Mobile.png'),fullPage:true});
