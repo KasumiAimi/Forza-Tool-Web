@@ -4,7 +4,8 @@
  --header:#0b0b0b;--field:#202020;--raised:#343434;--hover:#373737;--card:#2c2c2c;--secondary:#d5d5d5;--border-strong:#666;
  --pink:#ef3698;--pink-ink:#ff89c1;--accent:#caff02;--accent-ink:#caff02;
  --selected:#394027;--selected-border:#7f9539;--selected-ink:#e4f6b9;
- --image-glow:#555;--image-bg:#343434;--image-line:#727272;--poster-tint:#43283d;
+ --image-glow:#444846;--image-bg:#2c2f2e;--image-line:#ffffff18;--poster-tint:#43283d;
+ --surface-border:#ffffff0d;--surface-top:#2b2e2c;--surface-shadow:0 6px 20px #00000014;--surface-hover-shadow:0 20px 42px #0007,0 5px 14px #0004;
  --gold-ink:#f5d489;--gold-bg:#4b3e22;--gold-border:#8e7946;
 }
 [data-theme="light"]{
@@ -12,11 +13,13 @@
  --header:#fff;--field:#f1f2ed;--raised:#e9ece4;--hover:#edf0e7;--card:#fff;--secondary:#454b42;--border-strong:#979f90;
  --pink:#d8267b;--pink-ink:#b51d64;--accent:#caff02;--accent-ink:#506800;
  --selected:#e7efcf;--selected-border:#8c9e54;--selected-ink:#3b501b;
- --image-glow:#f5f6f0;--image-bg:#e3e7dc;--image-line:#c4ccba;--poster-tint:#f3e1eb;
+ --image-glow:#f5f6f0;--image-bg:#e9ede6;--image-line:#30482b12;--poster-tint:#f3e1eb;
+ --surface-border:#30482b14;--surface-top:#fff;--surface-shadow:0 6px 20px #25332108;--surface-hover-shadow:0 20px 42px #25332124,0 5px 14px #25332114;
  --gold-ink:#6e5016;--gold-bg:#fbf0cf;--gold-border:#bd9a4a;
 }
-/* Visual direction observed at forza.net: charcoal surfaces, bold headings,
-   large photography, acid yellow actions and restrained Horizon pink. */
+/* Horizon-inspired soft tiles. Color pairs stay together for both themes. */
+:root{--tile-radius:12px;--control-radius:7px}
+.route-car-flight{position:fixed;z-index:45;object-fit:contain;pointer-events:none;box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:"Segoe UI","Microsoft YaHei",sans-serif}
 button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 input,textarea{background:var(--field);color:var(--ink);border-color:var(--line)}
@@ -24,63 +27,79 @@ input,textarea{background:var(--field);color:var(--ink);border-color:var(--line)
 .header-inner{max-width:1500px}.web-logo small{color:var(--muted)}.logo-mark>span,.footer-logo b{color:var(--pink)}
 .nav-link{color:var(--secondary);font-weight:500}.nav-link.active,.nav-link:hover{color:var(--ink)}.nav-link.active:after{background:var(--accent);height:3px}
 .nav-toggle[aria-expanded=true]{color:var(--accent-ink)}
-.nav-dropdown{background:var(--panel);border-color:var(--line);box-shadow:0 18px 50px #0008;border-radius:3px}
-.nav-dropdown button{color:var(--ink);border-radius:2px}.nav-dropdown button:hover{background:var(--hover)}.nav-dropdown small,.dropdown-label{color:var(--muted)}
+.nav-dropdown{background:var(--panel);border-color:var(--line);box-shadow:0 18px 50px #0008;border-radius:var(--control-radius)}
+.nav-dropdown button{color:var(--ink);border-radius:var(--control-radius)}.nav-dropdown button:hover{background:var(--hover)}.nav-dropdown small,.dropdown-label{color:var(--muted)}
 .user-initial,.author-avatar,.avatar{background:var(--raised);color:var(--accent-ink);border-color:var(--border-strong)}.account{color:var(--ink)}.chevron{color:var(--muted)}
-.global-search{background:var(--field);border-color:var(--border-strong);border-radius:3px}.global-search:focus-within{border-color:var(--accent-ink)}
+.global-search{background:var(--field);border-color:var(--border-strong);border-radius:var(--control-radius)}.global-search:focus-within{border-color:var(--accent-ink)}
 .global-search input::placeholder,.global-search kbd,.search-icon,#clearGlobalSearch{color:var(--muted)}
-.global-search-panel{border-radius:3px;box-shadow:0 18px 50px #0008}.search-panel-heading>span,.global-search-status,.search-panel-footer,#globalSearchResults small,#globalSearchResults b,#globalSearchResults h3{color:var(--muted)}
+.global-search-panel{border-radius:var(--control-radius);box-shadow:0 18px 50px #0008}.search-panel-heading>span,.global-search-status,.search-panel-footer,#globalSearchResults small,#globalSearchResults b,#globalSearchResults h3{color:var(--muted)}
 #globalSearchResults [role=option]:hover,#globalSearchResults [role=option][aria-selected=true]{background:var(--selected)}
 .page{max-width:1440px}.reference-home #home{max-width:1440px}
 .reference-welcome{padding:34px 0 32px}.reference-welcome h1{font-size:32px;font-weight:850;letter-spacing:-1px;color:var(--ink)}.reference-welcome h1>span{color:var(--ink)}.reference-welcome h1>b{color:var(--accent-ink)}
 .reference-welcome .home-slogan{color:var(--secondary);font-size:16px;font-weight:500;letter-spacing:2px;margin-top:10px}.reference-welcome time{color:var(--muted);font-size:12px}
 .reference-home-layout{gap:48px 32px}.reference-feature-row{height:460px;gap:28px;grid-template-columns:minmax(0,1.9fr) minmax(340px,1fr)}
 .reference-highlights{gap:24px;grid-template-rows:minmax(0,1.55fr) minmax(0,1fr)}
-.reference-home .photo-feature{border-radius:4px;background:var(--panel)}
+.reference-home .photo-feature{border-radius:14px;background:var(--panel);box-shadow:var(--surface-shadow)}
+.photo-feature{touch-action:pan-y;cursor:grab;user-select:none}
+.photo-feature.is-dragging,.photo-feature.is-dragging *{cursor:grabbing}
+#featuredPhoto{transform:translateX(var(--photo-drag,0px)) scale(1.1);transition:transform .25s ease;-webkit-user-drag:none}
+.photo-feature.is-dragging #featuredPhoto{transition:none}
 .photo-shade{background:linear-gradient(90deg,#08080880,transparent 90%),linear-gradient(0deg,#080808b8,transparent 85%)}
 .reference-home .photo-feature-top{padding:28px 32px}.reference-home .photo-label{font-size:12px;letter-spacing:0}.photo-label i{background:var(--accent)}
-.reference-home .photo-submit{font-size:12px;padding:10px 15px;background:#1117;border-color:#fff9;border-radius:3px}.photo-submit:hover{background:var(--ink);color:#111}
+.reference-home .photo-submit{font-size:12px;padding:10px 15px;background:#1117;border-color:#fff9;border-radius:var(--control-radius)}.photo-submit:hover{background:var(--ink);color:#111}
 .reference-home .photo-feature-copy{left:36px;right:28px;bottom:92px}.reference-home .photo-feature-copy h1{font-size:40px;font-weight:850;line-height:1.35;letter-spacing:-1px;max-width:650px;text-shadow:0 2px 18px #0004}
-.reference-home .photo-feature-actions button{font-size:12px;font-weight:600}.reference-home .photo-feature-actions #heroHit{background:var(--accent);color:#111;border-radius:2px;padding:13px 20px}.photo-feature-actions #heroHit:hover{background:#dcff63}
-.reference-home .photo-carousel-bottom{left:36px;right:28px;bottom:26px}.photo-dots button[aria-pressed=true]{background:var(--accent)}.photo-arrows button{border-radius:2px;background:#1117}
-.dashboard-card,.week-panel{background:var(--panel);border-color:var(--line);border-radius:3px}.dashboard-card h3{color:var(--ink);font-weight:750}
-.dashboard-season{border-top:3px solid var(--accent)}.reference-home .dashboard-season .week-panel{padding:24px;gap:16px 20px}
+.reference-home .photo-feature-actions button{font-size:12px;font-weight:600}.reference-home .photo-feature-actions #heroHit{background:var(--accent);color:#111;border-radius:var(--control-radius);padding:13px 20px}.photo-feature-actions #heroHit:hover{background:#dcff63}
+.reference-home .photo-carousel-bottom{left:36px;right:28px;bottom:26px}.photo-dots button[aria-pressed=true]{background:var(--accent)}.photo-arrows button{border-radius:var(--control-radius);background:#1117}
+.dashboard-card,.week-panel{background:linear-gradient(145deg,var(--surface-top),var(--panel));border-color:var(--surface-border);border-radius:var(--tile-radius)}
+.dashboard-card{box-shadow:var(--surface-shadow)}.dashboard-card h3{color:var(--ink);font-weight:750}
+.dashboard-season{border-top:1px solid var(--surface-border)}.reference-home .dashboard-season .week-panel{padding:24px;gap:16px 20px}
 .week-heading>span,.week-heading button{color:var(--secondary)}.week-heading i{background:var(--accent)}.reference-home .dashboard-season .week-heading{font-size:13px}.reference-home .dashboard-season .week-heading button{font-size:11px}
 .reference-home .dashboard-season .week-title h2{font-size:38px;letter-spacing:1px;font-weight:850;color:var(--ink)}.reference-home .dashboard-season .week-title b{font-size:10px;color:var(--muted);letter-spacing:0}
 .week-timer{color:var(--muted)}.week-timer strong{color:var(--accent-ink);font-weight:700}.week-timer small{color:var(--muted)}.reference-home .dashboard-season .week-timer>span{font-size:11px}
-.week-rewards button{background:var(--raised);color:var(--muted);border-radius:2px}.week-rewards b{color:var(--ink)}.reference-home .dashboard-season .week-rewards button{font-size:10px}.reference-home .dashboard-season .week-rewards img{height:64px}
+.week-rewards button{background:var(--raised);color:var(--muted);border-radius:var(--control-radius)}.week-rewards b{color:var(--ink)}.reference-home .dashboard-season .week-rewards button{font-size:10px}.reference-home .dashboard-season .week-rewards img{height:64px}
 .week-action{color:var(--accent-ink)}.week-action:hover{color:var(--ink)}.reference-home .dashboard-season .week-action{font-size:13px}
 .reference-home .dashboard-league{padding:22px 24px}.reference-home .dashboard-league h3{font-size:14px}.section-heading button,.dashboard-card-heading button{color:var(--muted)}.reference-home .dashboard-league .section-heading button{font-size:11px}
-.poster{background:linear-gradient(110deg,var(--poster-tint),var(--panel));color:var(--ink);border-radius:2px;border-left:3px solid var(--pink)}.contact{background:var(--raised);color:#d4d4d4;border-radius:2px}.contact b{color:var(--pink-ink)}.contact span{color:var(--muted)}
+.poster{background:linear-gradient(110deg,var(--poster-tint),var(--panel));color:var(--ink);border-radius:var(--control-radius);border-left:0}.contact{background:var(--raised);color:var(--secondary);border-radius:var(--control-radius)}.contact b{color:var(--pink-ink)}.contact span{color:var(--muted)}
 .dashboard-league .section-heading button{color:var(--muted)}
-#home .reference-profile-rail{padding:25px;border-top:3px solid var(--pink)}.reference-profile-rail .dashboard-card-heading h3{font-size:16px}.reference-profile-rail .dashboard-card-heading button{font-size:11px}
-#homeActivity .drawer-empty{background:var(--raised);color:var(--muted);border-radius:2px;line-height:1.9}
+#home .reference-profile-rail{padding:25px;border-top:1px solid var(--surface-border)}.reference-profile-rail .dashboard-card-heading h3{font-size:16px}.reference-profile-rail .dashboard-card-heading button{font-size:11px}
+#homeActivity .drawer-empty{background:var(--raised);color:var(--muted);border-radius:8px;line-height:1.9}
 #homeActivity .drawer-update strong{color:var(--ink)}#homeActivity .drawer-update span{color:var(--muted)}.drawer-update>b{color:var(--accent-ink)}
 .reference-home .discover-section .web-section-heading{margin-bottom:24px;gap:24px}.reference-home .discover-section .web-section-heading h2{font-size:25px;font-weight:850;letter-spacing:-.7px}
 .reference-discover-tabs{gap:22px}.reference-discover-tabs button{font-size:12px;color:var(--muted)}.tabs button.active,.tabs button[aria-selected=true]{color:var(--ink);border-color:var(--pink)}
 .text-link{color:var(--secondary)}.text-link:hover{color:var(--accent-ink)}
-.vehicle,.web-vehicle{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:2px}.vehicle:hover{border-color:var(--accent-ink);box-shadow:0 10px 30px #0003;transform:translateY(-4px)}
-.reference-home #homeCars{gap:22px}.vehicle-image{background:radial-gradient(ellipse at 50% 80%,var(--image-glow),var(--image-bg) 75%);border-bottom-color:var(--line)}.vehicle-image:after{background:var(--image-line)}.vehicle-open{color:var(--secondary)}
+.vehicle,.web-vehicle{position:relative;background:var(--card);border:1px solid var(--surface-border);border-radius:var(--tile-radius);box-shadow:var(--surface-shadow);transform-origin:center;transition:transform .26s cubic-bezier(.2,.8,.2,1),border-color .2s ease,box-shadow .26s ease}
+.vehicle-image img{transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.vehicle:focus-visible{z-index:2;transform:translateY(-7px) scale(1.035);box-shadow:var(--surface-hover-shadow);outline-color:var(--accent-ink);outline-offset:2px;border-color:var(--selected-border)}
+.vehicle:focus-visible .vehicle-image img{transform:scale(1.04)}
+/* Lift the whole tile, with a smaller secondary movement inside its image. */
+@media(hover:hover) and (pointer:fine){
+ .vehicle:hover{z-index:2;border-color:var(--selected-border);box-shadow:var(--surface-hover-shadow);transform:translateY(-7px) scale(1.035)}
+ .vehicle:hover .vehicle-image img{transform:scale(1.04)}
+ .vehicle:active{transform:translateY(-2px) scale(1.01);transition-duration:.1s}
+}
+@media(hover:none){.vehicle:hover{transform:none}}
+.reference-home #homeCars{gap:22px}.vehicle-image{background:radial-gradient(ellipse at 50% 65%,var(--image-glow),var(--image-bg) 80%);border-bottom:0}.vehicle-image:after{background:var(--image-line);opacity:.35}.vehicle-open{color:var(--secondary)}
 .reference-home .reference-car-card .vehicle-image{height:180px}.reference-home .reference-car-card .vehicle-info{padding:22px 19px 24px}.vehicle-info>p{color:var(--muted)}.vehicle-info h3{color:var(--ink);font-weight:750}.vehicle-bottom>span{color:var(--secondary)}.reference-home .reference-car-card .vehicle-bottom>span{font-size:11px}
-.tags>span{background:var(--raised);border-color:var(--border-strong);color:var(--secondary);border-radius:2px}.tags>.selected{background:var(--selected);border-color:var(--selected-border);color:var(--selected-ink)}.level-badges b{color:var(--ink)}
+.tags>span{background:var(--raised);border-color:var(--surface-border);color:var(--secondary);border-radius:5px}.tags>.selected{background:var(--selected);border-color:var(--selected-border);color:var(--selected-ink)}.level-badges b{color:var(--ink)}
 .site-footer{border-color:var(--line);max-width:1344px;margin-top:32px;padding:32px 0}.site-footer>div>span,.site-footer nav button,.site-footer>small{color:var(--muted)}.site-footer nav button:hover{color:var(--accent-ink)}
 .web-breadcrumb,.web-breadcrumb button{color:var(--muted)}.sub-header h1{color:var(--ink);font-weight:850}.sub-header>div>p,.album-intro p{color:var(--muted);font-size:13px}
-.web-primary,.placeholder button,.dialog-actions .primary{background:var(--accent);color:#101010;border-radius:2px;font-weight:700}.web-primary:hover,.placeholder button:hover{background:#dcff63}
-.placeholder,.result-empty,.web-filters,.library-controls,.spec-card,.tune,.event-card,.creator,.guide-row{background:var(--panel);border-color:var(--line);border-radius:3px;color:var(--ink)}
+.web-primary,.placeholder button,.dialog-actions .primary{background:var(--accent);color:#101010;border-radius:var(--control-radius);font-weight:700}.web-primary:hover,.placeholder button:hover{background:#dcff63}
+.placeholder,.result-empty,.web-filters,.library-controls,.spec-card,.tune,.event-card,.creator,.guide-row{background:var(--panel);border-color:var(--surface-border);border-radius:var(--tile-radius);color:var(--ink)}
 .placeholder p,.result-empty p,.spec-card>p,.tune-desc,.event-card>p,.creator small,.guide-row span,.guide-row b,.album-intro p{color:var(--muted)}
 .placeholder h3,.result-empty h2,.spec-card h3,.event-card>h3,.guide-row h2,.section-title,.creator{color:var(--ink)}
 .web-modebar,.tier-heading,.spec-card dl>div,.tune-desc{border-color:var(--line)}.web-modebar>span,.web-modebar i,.filter-section>label,.tier-heading .tier-subtitle,.tier-heading .tier-count{color:var(--muted)}.tier-heading{color:var(--ink)}
 .brand-trigger,.pills button,.detail-heading>button{background:var(--raised);border-color:var(--border-strong);color:var(--secondary)}.pills button.active{background:var(--selected);border-color:var(--accent-ink);color:var(--selected-ink)}.clear-filter{color:var(--pink-ink)}
-.vehicle-masthead{background:var(--panel);border-radius:3px}.masthead-car{background:radial-gradient(ellipse at 50% 70%,var(--image-glow),transparent 70%)}.vehicle-masthead-copy>.eyebrow,.masthead-meta,.vehicle-masthead-copy>small{color:var(--muted)}
+.vehicle-masthead{background:var(--panel);border-radius:var(--tile-radius)}.masthead-car{background:radial-gradient(ellipse at 50% 70%,var(--image-glow),transparent 70%)}.vehicle-masthead-copy>.eyebrow,.masthead-meta,.vehicle-masthead-copy>small{color:var(--muted)}
 .save-button{color:var(--ink);border-color:var(--border-strong)}.save-button.saved{color:var(--accent-ink);border-color:var(--accent-ink)}.spec-card dt,.spec-card dd{color:var(--secondary)}.detail-heading h2{color:var(--ink)}.detail-heading h2>small{color:var(--muted)}
 .tuner-profile,.tuner-profile strong{color:var(--ink)}.tuner-profile small,.tuner-profile .tuner-more,.tune-desc>span{color:var(--muted)}.copy-tuner{background:var(--selected);border-color:var(--selected-border);color:var(--selected-ink)}.tags>.online{color:var(--selected-ink);background:var(--selected);border-color:var(--selected-border)}.tags>.tier-chip{color:var(--gold-ink);background:var(--gold-bg);border-color:var(--gold-border)}.like{color:var(--secondary)}.like.liked{color:var(--pink-ink)}
 .next-season{background:var(--selected);border-color:var(--selected-border);color:var(--selected-ink)}.next-season small,.next-season b,.next-season>button{color:var(--selected-ink)}.season-banner{background:linear-gradient(100deg,#111d,#1115),url('assets/home/seasonal-guide-bg-v2.jpg') center/cover;border-color:var(--border-strong)}
 .drawer{background:var(--field);border-color:var(--border-strong);color:var(--ink);box-shadow:-15px 0 50px #0006}.drawer-head{border-color:var(--line)}.user>span>small,.driver-profile-summary p{color:var(--muted)}.profile-home-link{color:var(--accent-ink)}.close{color:var(--secondary)}
-dialog{background:var(--panel);color:var(--ink);border-color:var(--border-strong);box-shadow:0 20px 90px #0008;border-radius:3px}dialog::backdrop,.backdrop{background:#0009}.dialog-actions button{background:var(--raised);color:var(--secondary)}#brandList button{color:var(--ink);border-color:var(--border-strong)}#brandList button:hover{background:var(--selected)}#brands p,#photo p{color:var(--muted)}
+dialog{background:var(--panel);color:var(--ink);border-color:var(--border-strong);box-shadow:0 20px 90px #0008;border-radius:var(--control-radius)}dialog::backdrop,.backdrop{background:#0009}.dialog-actions button{background:var(--raised);color:var(--secondary)}#brandList button{color:var(--ink);border-color:var(--border-strong)}#brandList button:hover{background:var(--selected)}#brands p,#photo p{color:var(--muted)}
 #photoSubmission p,#photoSubmission label,#photoSubmission small{color:var(--secondary)}#photoSubmission input{background:var(--raised);border-color:var(--border-strong);color:var(--ink)}#toast{background:var(--raised);color:var(--ink);border-color:var(--border-strong);box-shadow:0 8px 30px #0006}th,td{color:var(--secondary);border-color:var(--line)}
 @media(min-width:701px) and (max-width:1100px){.reference-feature-row{height:460px;grid-template-columns:minmax(0,1.5fr) 320px}.reference-home .photo-feature-copy h1{font-size:33px}.reference-home .photo-feature-copy{left:26px;right:20px}.reference-home .photo-feature-top{padding:24px}.reference-home .dashboard-season .week-panel{padding:20px;gap:12px}.reference-home .discover-section .web-section-heading{flex-wrap:wrap}.reference-discover-tabs{order:3;flex-basis:100%}}
 @media(max-width:700px){.reference-welcome{padding:27px 0}.reference-welcome h1{font-size:26px}.reference-welcome .home-slogan{font-size:13px;letter-spacing:1px}.reference-welcome time{font-size:10px}.reference-home-layout{gap:30px}.reference-feature-row{height:auto;grid-template-columns:1fr;gap:22px}.reference-home .photo-feature{height:410px}.reference-home .photo-feature-top{padding:22px}.reference-home .photo-feature-copy{left:24px;right:20px;bottom:91px}.reference-home .photo-feature-copy h1{font-size:31px}.reference-home .photo-carousel-bottom{left:24px;right:20px}.reference-home .photo-submit{font-size:10px;padding:9px 10px}.reference-home .photo-label{font-size:11px}.reference-home .discover-section .web-section-heading h2{font-size:23px}.reference-home .discover-section .web-section-heading{gap:7px 15px}.reference-home .reference-car-card .vehicle-image{height:210px}.site-footer{margin:28px 20px 0}.reference-home .dashboard-season .week-panel{padding:22px}.reference-home .dashboard-season .week-rewards img{height:52px}}
-@media(prefers-reduced-motion:reduce){button,.vehicle{transition:none}.vehicle:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){button,.vehicle,.vehicle-image img{transition:none}.vehicle:hover,.vehicle:focus-visible,.vehicle:active,.vehicle:hover .vehicle-image img,.vehicle:focus-visible .vehicle-image img{transform:none}}
+@media(prefers-reduced-motion:reduce){#featuredPhoto{transform:none;transition:none}}
 
 /* Photography overlays remain white in both themes. */
 .photo-feature,.season-banner,.blueprint{--ink:#fff}
@@ -88,7 +107,7 @@ dialog{background:var(--panel);color:var(--ink);border-color:var(--border-strong
 .vehicle-masthead,.vehicle-masthead-copy h2{color:var(--ink)}
 .contact{color:var(--secondary)}
 .drawer:not(.open){box-shadow:none}
-.theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:64px;min-height:36px;padding:7px 10px;border:1px solid var(--border-strong);border-radius:3px;background:var(--field);color:var(--ink);white-space:nowrap;font-size:12px;flex-shrink:0}
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:64px;min-height:36px;padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--control-radius);background:var(--field);color:var(--ink);white-space:nowrap;font-size:12px;flex-shrink:0}
 .theme-toggle:hover{background:var(--hover);border-color:var(--accent-ink)}.theme-icon{font-size:17px;line-height:1}.header-tools{gap:14px}
 @media(min-width:1321px){.global-search{min-width:160px;flex-basis:215px}.header-inner{gap:18px}.site-header .primary-navigation{gap:15px}}
 @media(max-width:700px){.theme-toggle{min-width:36px;padding:7px}.theme-label{display:none}.header-tools{gap:12px}}

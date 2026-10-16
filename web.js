@@ -89,7 +89,51 @@ $('#nextPhoto').onclick=()=>showFeaturedPhoto(featuredPhotoIndex+1);
 $('#pausePhotos').onclick=()=>{photoRotationPaused=!photoRotationPaused;updatePhotoRotationControl();};
 $('#heroHit').onclick=()=>{const photo=communityPhotos[featuredPhotoIndex];$('#photo img').src=photo.src;$('#photo img').alt=photo.title;$('#photo p').textContent=photo.title+' · '+photo.author;$('#photo').showModal();};
 $('.photo-feature').addEventListener('keydown',event=>{if(event.target!==event.currentTarget)return;if(['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();showFeaturedPhoto(featuredPhotoIndex+(event.key==='ArrowRight'?1:-1));}});
-setInterval(()=>{const feature=$('.photo-feature');if(!photoRotationPaused&&!currentRoute&&!document.hidden&&!feature.matches(':hover')&&!feature.contains(document.activeElement)&&!document.querySelector('dialog[open]'))showFeaturedPhoto(featuredPhotoIndex+1);},6000);
+// Pointer capture keeps a swipe intact even when the pointer leaves the photo.
+const photoFeature=$('.photo-feature');
+let photoDrag=null,photoClickBlockedUntil=0;
+$('#featuredPhoto').draggable=false;
+photoFeature.addEventListener('pointerdown',event=>{
+ if(!event.isPrimary||event.button!==0||photoDrag)return;
+ photoClickBlockedUntil=0;
+ const control=event.target.closest('button,a,input');
+ if(control&&control.id!=='heroHit')return;
+ const capture=control||photoFeature;
+ photoDrag={id:event.pointerId,x:event.clientX,y:event.clientY,dx:0,horizontal:false,capture};
+ capture.setPointerCapture(event.pointerId);
+});
+photoFeature.addEventListener('pointermove',event=>{
+ if(!photoDrag||photoDrag.id!==event.pointerId)return;
+ const dx=event.clientX-photoDrag.x,dy=event.clientY-photoDrag.y;
+ if(!photoDrag.horizontal){
+  if(Math.abs(dy)>8&&Math.abs(dy)>Math.abs(dx)){finishPhotoDrag(false);return;}
+  if(Math.abs(dx)<8||Math.abs(dx)<Math.abs(dy)*1.2)return;
+  photoDrag.horizontal=true;photoFeature.classList.add('is-dragging');
+ }
+ photoDrag.dx=dx;
+ event.preventDefault();
+ const limit=Math.min(40,photoFeature.clientWidth*.045);
+ photoFeature.style.setProperty('--photo-drag',Math.max(-limit,Math.min(limit,dx*.3))+'px');
+});
+function finishPhotoDrag(commit){
+ if(!photoDrag)return;
+ const drag=photoDrag;photoDrag=null;
+ if(drag.horizontal){
+  photoClickBlockedUntil=performance.now()+500;
+  const threshold=Math.min(80,Math.max(40,photoFeature.clientWidth*.12));
+  if(commit&&Math.abs(drag.dx)>=threshold)showFeaturedPhoto(featuredPhotoIndex+(drag.dx<0?1:-1));
+ }
+ photoFeature.classList.remove('is-dragging');photoFeature.style.removeProperty('--photo-drag');
+ if(drag.capture.hasPointerCapture(drag.id))drag.capture.releasePointerCapture(drag.id);
+}
+photoFeature.addEventListener('pointerup',event=>{if(photoDrag?.id===event.pointerId)finishPhotoDrag(true);});
+photoFeature.addEventListener('pointercancel',event=>{if(photoDrag?.id===event.pointerId)finishPhotoDrag(false);});
+photoFeature.addEventListener('lostpointercapture',event=>{if(photoDrag?.id===event.pointerId)finishPhotoDrag(false);});
+window.addEventListener('blur',()=>finishPhotoDrag(false));
+photoFeature.addEventListener('click',event=>{
+ if(performance.now()<photoClickBlockedUntil){event.preventDefault();event.stopImmediatePropagation();}
+},true);
+setInterval(()=>{const feature=$('.photo-feature');if(!photoDrag&&!photoRotationPaused&&!currentRoute&&!document.hidden&&!feature.matches(':hover')&&!feature.contains(document.activeElement)&&!document.querySelector('dialog[open]'))showFeaturedPhoto(featuredPhotoIndex+1);},6000);
 function renderAlbum(){
  $('#subcontent').innerHTML=`<div class="album-intro"><p>不必是调校师或赛道作者，一张相片也能成为社区的一部分。</p><button class="web-primary" data-submit-photo>投稿我的相片 ＋</button></div><div class="weekly-photo-grid">${communityPhotos.map((photo,index)=>`<button class="weekly-photo" data-album-photo="${index}"><img src="${photo.src}" alt="${esc(photo.title)}"><span><small>PHOTO ${String(index+1).padStart(2,'0')} · ${esc(photo.author)}</small><strong>${esc(photo.title)}</strong><b>查看大图 ↗</b></span></button>`).join('')}</div>`;
 }
