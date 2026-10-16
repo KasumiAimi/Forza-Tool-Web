@@ -25,20 +25,20 @@ const carSpecs=[
  ['Toyota','AE86','日本','car_660.webp','C','T2','公路','后驱']
 ];
 const cars=carSpecs.map((c,i)=>({_id:'demo_'+i,brand:c[0],name:c[1],country:c[2],image:c[3],level:c[4],driveType:c[7],category:'跑车',obtainMethod:'商店购买',description:'用于预览布局的演示车辆。图片、参数与调校不代表真实游戏数据。',tuningData:[{tuningId:'demo_tune_'+i,tier:c[5],level:c[4],scenario:c[6],driveType:c[7],online:true,tuner:['Demo Apex','Demo Horizon','Demo Driver'][i%3],likes:12+i*7,tireType:'半热熔',description:'演示调校：转向响应清晰，适合查看标签、调校师与简评的排版。'},{tuningId:'demo_drift_'+i,tier:i%2?'玩具':'常规',level:i%2?'S1':'A',scenario:i%2?'漂移':'直线加速',driveType:'后驱',online:false,tuner:'Demo Drift',likes:3+i,tireType:'漂移胎',description:'演示调校：仅用于测试模式切换与条件筛选。'}]}));
-let collected=new Set(JSON.parse(localStorage.getItem('horizon_web_v2_collected')||'[]'));
+let collected=readLocalIds('horizon_web_v2_collected');
 let liked=new Set();let followed=new Set();
-let nick=localStorage.getItem('horizon_web_v2_nickname')||'车手';
+let nick=readLocalString('horizon_web_v2_nickname','车手');
 let slide=0,currentRoute='',mode='online',filters={brand:'',level:'',scenario:'',driveType:''},detailOrigin='',detailTier='',detailCar=null,showAll=false;
 const modeOptions=()=>({levels:mode==='online'?['R','S2','S1','A','B','C']:levels,scenarios:mode==='online'?['公路','拉力','越野']:['漂移','直线加速'],drives:['四驱','后驱','前驱']});
 function scenarios(){let a=modeOptions().scenarios;if(mode==='online'&&['R','S2'].includes(filters.level))return ['公路'];if(mode==='online'&&filters.level==='C')return ['公路','拉力'];return a;}
 function notify(t){$('#toast').textContent=t;$('#toast').style.display='block';clearTimeout(notify.timer);notify.timer=setTimeout(()=>$('#toast').style.display='none',2200)}
-function saveCollect(){localStorage.setItem('horizon_web_v2_collected',JSON.stringify([...collected]))}
+function saveCollect(){writeLocalValue('horizon_web_v2_collected',[...collected])}
 async function copy(t){try{await navigator.clipboard.writeText(t);notify('已复制：'+t)}catch{notify('浏览器未允许复制')}}
 function updateNick(){ $('#drawerName').innerHTML=esc(nick)+' <small>✎</small>';$('#nickDisplay').textContent=nick; }
 function drawer(open){$('#drawer').classList.toggle('open',open);$('#drawer').inert=!open;$('#backdrop').classList.toggle('hidden',!open);document.body.style.overflow=open?'hidden':'';if(open)$('#closeDrawer').focus();else $('#logo').focus()}
 function editName(){drawer(false);$('#nameInput').value=nick;$('#nickname').showModal();$('#nameInput').focus()}
 
-$('#nameForm').onsubmit=e=>{e.preventDefault();const n=$('#nameInput').value.trim();if(!n)return;nick=n;localStorage.setItem('horizon_web_v2_nickname',n);updateNick();$('#nickname').close();notify('代号更新成功')};
+$('#nameForm').onsubmit=e=>{e.preventDefault();const n=$('#nameInput').value.trim();if(!n)return;nick=n;try{localStorage.setItem('horizon_web_v2_nickname',n)}catch{notify('浏览器无法保存代号，本次页面内有效')};updateNick();$('#nickname').close();notify('代号更新成功')};
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());document.addEventListener('keydown',e=>{if(e.key==='Escape')drawer(false)});$('#copyContact').onclick=()=>copy('KMTTB');$('#poster').onclick=()=>$('#photo').showModal();$('#feedback').onclick=()=>navigate('feedback');
 function navigate(route,push=true){drawer(false);document.querySelectorAll('dialog[open]').forEach(d=>d.close());currentRoute=route;if(push)history.pushState({route},'',route?'#'+route:location.pathname);$('#home').classList.toggle('hidden',!!route);$('#subpage').classList.toggle('hidden',!route);if(!route){window.scrollTo(0,0);return}$('#pageTitle').textContent=entries.find(e=>e[0]===route)?.[1]||({carDetail:'车辆详情',feedback:'意见反馈',tunerProfile:'调校师主页',article:'攻略详情',blueprintDetail:'蓝图详情',seasonPreview:'下期季节赛预告'})[route]||'';render();window.scrollTo(0,0)}
 window.onpopstate=e=>navigate(e.state?.route||'',false);$('#back').onclick=()=>{if(history.state?.route)history.back();else navigate('')};
@@ -59,7 +59,7 @@ function render(){
  else if(currentRoute==='seasonalEvents'||currentRoute==='seasonPreview')renderSeason(currentRoute==='seasonPreview');
  else if(currentRoute==='collection')$('#subcontent').innerHTML=`<div class="tabs"><button class="active">收藏车辆</button><button data-route="blueprintRecommendation">收藏蓝图</button></div><div class="car-grid library-grid">${cars.filter(c=>collected.has(c._id)).map(c=>card(c,'',true)).join('')||'<div class="placeholder"><h2>暂无收藏车辆</h2><p>进入车辆详情，点击星标收藏车辆。</p></div>'}</div>`;
  else if(currentRoute==='ranking')$('#subcontent').innerHTML=`<div class="creator-list">${['Demo Apex','Demo Horizon','Demo Driver'].map((n,i)=>`<button class="creator" data-tuner="${n}"><b>0${i+1}</b><span class="avatar">🏎️</span><strong>${n}<small>演示创作者 · ${cars.filter(c=>c.tuningData.some(t=>t.tuner===n)).length} 个作品</small></strong><span>查看主页 ›</span></button>`).join('')}</div>`;
- else if(currentRoute==='tunerProfile')$('#subcontent').innerHTML=`<div class="profile-heading"><span class="avatar">🏎️</span><h2>${esc(render.tuner||'Demo Apex')}</h2><button id="follow" class="copy-tuner">${followed.has(render.tuner)?'已关注':'关注调校师'}</button></div><div class="car-grid library-grid">${cars.filter(c=>c.tuningData.some(t=>t.tuner===render.tuner)).map(c=>card(c,'',true)).join('')}</div>`, $('#follow').onclick=()=>{followed.has(render.tuner)?followed.delete(render.tuner):followed.add(render.tuner);render()};
+ else if(currentRoute==='tunerProfile')$('#subcontent').innerHTML=`<div class="profile-heading"><span class="avatar">🏎️</span><h2>${esc(render.tuner||'Demo Apex')}</h2><button id="follow" class="copy-tuner">${followed.has(creatorIdFor(render.tuner))?'已关注':'关注创作者'}</button></div><div class="car-grid library-grid">${cars.filter(c=>c.tuningData.some(t=>t.tuner===render.tuner)).map(c=>card(c,'',true)).join('')}</div>`, $('#follow').onclick=()=>{followed.has(creatorIdFor(render.tuner))?followed.delete(creatorIdFor(render.tuner)):followed.add(creatorIdFor(render.tuner));saveFollowedCreators();render()};
  else if(currentRoute==='blueprintRecommendation')$('#subcontent').innerHTML=`<div class="blueprint-grid">${['山间公路','城市夜赛','海岸环线','车库练习'].map((n,i)=>`<button class="blueprint" data-route="blueprintDetail" style="background-image:linear-gradient(0deg,#0b0c12,transparent),url('assets/home/${entries[i+2][3]}')"><span>演示蓝图</span><h2>${n}</h2><small>查看蓝图 ›</small></button>`).join('')}</div>`;
  else if(currentRoute==='blueprintDetail')$('#subcontent').innerHTML='<div class="placeholder"><h2>山间公路 · 演示蓝图</h2><p>用于查看蓝图详情页的桌面布局。</p><button data-copy="123 456 789">复制演示分享码</button></div>';
  else if(currentRoute==='gameGuide')$('#subcontent').innerHTML=`<div class="guide-list">${['新手入门','车辆与调校','地图资源','常见问题'].map((n,i)=>`<button class="guide-row" data-route="article"><span>0${i+1}</span><h2>${n}</h2><b>›</b></button>`).join('')}</div>`;
@@ -78,8 +78,7 @@ const lk=e.target.closest('[data-like]');if(lk){liked.has(lk.dataset.like)?liked
 const tu=e.target.closest('[data-tuner]');if(tu){render.tuner=tu.dataset.tuner;navigate('tunerProfile');return}
 const ph=e.target.closest('[data-photo]');if(ph){$('#photo img').src=ph.dataset.photo;$('#photo p').textContent='演示车辆配图';$('#photo').showModal()}
 });
-updateNick();history.replaceState({route:''},'',location.pathname);
+updateNick();history.replaceState({route:''},'',location.pathname+location.search+location.hash);
 
 $('#drawer .season-card strong').textContent='3天 14小时';$('#drawer .season-card>small').textContent='演示赛季时间';
-document.querySelectorAll('.drawer-empty')[0].innerHTML='<button class="drawer-update" data-car="demo_0" data-tier="META"><b>META · A</b><strong>Demo Apex</strong><span>190E 新调校 · 演示动态 ›</span></button>';
 document.querySelectorAll('.drawer-empty')[1].innerHTML='<button class="drawer-update" data-route="blueprintRecommendation"><b>演示蓝图</b><strong>山间公路</strong><span>查看最新蓝图 ›</span></button>';

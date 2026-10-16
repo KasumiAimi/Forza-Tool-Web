@@ -1,0 +1,51 @@
+/* The same navigation DOM becomes a vertical disclosure when its natural width won't fit. */
+.site-header{position:sticky;top:0;height:72px;z-index:60;overflow:visible}
+.site-header .header-inner{height:72px;max-width:1500px;padding:0 24px;display:flex;flex-wrap:nowrap;align-items:center;gap:18px;position:relative}
+.site-header .web-logo{order:1;flex:none;gap:9px}
+.site-header .web-logo>span:last-child{display:block}
+.site-header .web-logo[aria-current=page]{color:var(--ink)}
+.site-header .primary-navigation{order:2;display:flex;flex:0 0 auto;flex-wrap:nowrap;align-items:center;gap:18px;height:72px;width:auto;margin:0;padding:0;overflow:visible}
+.site-header .primary-navigation[hidden]{display:none}
+.site-header .primary-navigation>.nav-link,.site-header .nav-group>.nav-toggle{height:72px;padding:0;font-size:13px;white-space:nowrap}
+.site-header .nav-group{display:flex;flex:none;align-items:center;position:relative;height:72px;grid-column:auto}
+.site-header #primaryNavigation .nav-group .nav-dropdown{position:absolute;left:0;right:auto;top:100%;transform:none;width:250px;max-width:calc(100vw - 24px);padding:10px}
+.site-header #primaryNavigation .nav-group:last-child .nav-dropdown{left:auto;right:0}
+.site-header .global-search{order:3;flex:1 1 210px;min-width:170px;max-width:270px;margin:0 0 0 auto;padding:9px 10px;gap:7px}
+.site-header .header-tools{order:4;display:flex;flex:none;align-items:center;gap:12px;margin:0}
+.site-header .account #nickDisplay{max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-header .navigation-toggle{order:0;display:none;align-items:center;justify-content:center;gap:7px;flex:none;min-height:38px;background:var(--raised);color:var(--ink);border:1px solid var(--line);border-radius:3px;padding:8px 10px;font-size:12px;white-space:nowrap}
+.site-header.is-collapsed .navigation-toggle{display:flex}
+.site-header.is-collapsed .primary-navigation{position:absolute;top:100%;left:24px;display:flex;flex-direction:column;align-items:stretch;gap:0;width:320px;max-width:calc(100vw - 32px);height:auto;max-height:calc(100svh - 84px);overflow-y:auto;overscroll-behavior:contain;padding:12px;background:var(--panel);border:1px solid var(--line);box-shadow:0 18px 40px #0004;border-radius:0 0 3px 3px}
+.site-header.is-collapsed .primary-navigation[hidden]{display:none}
+.site-header.is-collapsed .primary-navigation>.nav-link,.site-header.is-collapsed .nav-group>.nav-toggle{width:100%;height:auto;min-height:46px;padding:12px;text-align:left;line-height:1.6;font-size:14px}
+.site-header.is-collapsed .nav-group{display:flex;flex-direction:column;align-items:stretch;height:auto}
+.site-header.is-collapsed #primaryNavigation .nav-group .nav-dropdown{position:static;transform:none;width:100%;max-width:none;border:0;border-left:2px solid var(--pink);box-shadow:none;margin:0 0 6px;border-radius:0;background:var(--raised)}
+.site-header.is-collapsed .nav-link.active:after{left:0;right:auto;top:12px;bottom:12px;width:3px;height:auto}
+.site-header.is-collapsed .nav-toggle>span{float:right}
+.site-header.is-measuring .primary-navigation{display:flex;position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;flex-direction:row;align-items:center;gap:18px;width:max-content;max-width:none;height:72px;max-height:none;overflow:visible;padding:0;border:0;box-shadow:none}
+.site-header.is-measuring .nav-group{flex-direction:row;align-items:center;height:72px}
+.site-header.is-measuring .primary-navigation>.nav-link,.site-header.is-measuring .nav-group>.nav-toggle{height:72px;width:auto;min-height:0;padding:0;font-size:13px}
+.site-header.is-measuring .nav-dropdown{display:none!important}
+@media(max-width:900px){
+ .site-header .header-inner{gap:12px;padding:0 16px}
+ .site-header .global-search kbd{display:none}
+ .site-header .theme-label,.site-header .account #nickDisplay,.site-header .account .chevron{display:none}
+ .site-header .header-tools{gap:9px}
+ .site-header.is-collapsed .primary-navigation{left:16px}
+}
+@media(max-width:600px){
+ .site-header,.site-header .header-inner{height:64px}
+ .site-header .header-inner{padding:0 10px;gap:8px}
+ .site-header .web-logo>span:last-child{display:none}
+ .site-header .logo-mark{font-size:26px;padding:0}
+ .site-header .global-search{min-width:0;padding:8px 7px;gap:4px;max-width:none}
+ .site-header .global-search input{font-size:11px}
+ .site-header .global-search .search-icon{display:none}
+ .site-header .navigation-toggle{gap:4px;font-size:11px;padding:8px 7px}
+ .site-header .header-tools{gap:7px}
+ .site-header .theme-toggle{padding:7px;min-width:30px;min-height:32px}
+ .site-header .user-initial{width:28px;height:28px}
+ .site-header.is-collapsed .primary-navigation{left:10px;max-width:calc(100vw - 20px);max-height:calc(100svh - 76px)}
+ .site-header .global-search-panel{position:fixed;top:72px;left:10px;right:10px;width:auto;max-width:none}
+ .site-header #globalSearchResults{max-height:50svh}
+}
