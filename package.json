@@ -5,7 +5,7 @@
   "description": "Horizon 6 player-facing Web UI prototype with local demo data",
   "scripts": {
     "start": "node server.cjs",
-    "test": "node tests/check.cjs && node tests/navigation.cjs && node tests/search.cjs && node tests/theme.cjs && node tests/vehicles.cjs && node tests/garage.cjs && node tests/garage-library.cjs && node tests/vehicle-detail-screen.cjs && node tests/vehicle-liveries.cjs && node tests/livery-center.cjs && node tests/activity.cjs && node tests/header.cjs && node tests/game-guide.cjs && node tests/weekly-album.cjs && node tests/ranking-screen.cjs && node tests/blueprint-magazine.cjs"
+    "test": "node tests/check.cjs && node tests/navigation.cjs && node tests/search.cjs && node tests/theme.cjs && node tests/vehicles.cjs && node tests/garage.cjs && node tests/garage-library.cjs && node tests/vehicle-detail-screen.cjs && node tests/vehicle-liveries.cjs && node tests/livery-center.cjs && node tests/activity.cjs && node tests/header.cjs && node tests/game-guide.cjs && node tests/weekly-album.cjs && node tests/ranking-screen.cjs && node tests/blueprint-magazine.cjs && node tests/carousel.cjs && node tests/motion.cjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

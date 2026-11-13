@@ -126,8 +126,8 @@ function syncVehicleHistory(){
 let vehicleHistoryReady=false;
 onBeforeNavigate(route=>{
  if(route==='carDetail'&&!['liveryCenter','liveryCollection','liveryProfile'].includes(detailOrigin))selectedLiveryWorkId='';
- if(route==='carSelection'&&currentRoute!== 'carDetail'){vehicleCountry='';savedOnly=false;}
- if(route==='collection'&&currentRoute!=='carDetail'){filters={brand:'',level:'',scenario:'',driveType:''};libraryQuery='';vehicleCountry='';savedOnly=false;}
+ if(vehicleHistoryReady&&route==='carSelection'&&currentRoute!=='carDetail'){vehicleCountry='';savedOnly=false;}
+ if(vehicleHistoryReady&&route==='collection'&&currentRoute!=='carDetail'){filters={brand:'',level:'',scenario:'',driveType:''};libraryQuery='';vehicleCountry='';savedOnly=false;}
 });
 onAfterNavigate(route=>{
  if(!route){document.body.classList.remove('garage-route-active');$('#subpage').classList.remove('garage-layout-active');}syncVehicleHistory();
