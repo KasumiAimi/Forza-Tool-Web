@@ -1,0 +1,22 @@
+.pc-shell{padding-bottom:24px}
+.pc-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:5px;border:1px solid var(--line);border-radius:7px;background:var(--panel)}
+.pc-tabs button{display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;padding:12px 6px;border:0;border-radius:4px;background:none;color:var(--muted);font-weight:750}
+.pc-tabs button[aria-selected=true]{background:var(--selected);color:var(--selected-ink);box-shadow:inset 0 -2px var(--accent-ink)}
+.pc-tabs small{font-size:10px;color:inherit}
+.pc-tools{display:flex;align-items:end;flex-wrap:wrap;gap:10px;padding:12px 0 16px}
+.pc-tools label{display:grid;gap:5px;font-size:12px;color:var(--muted)}
+.pc-tools :is(input,select){min-height:34px;max-width:100%;padding:5px 9px;border:1px solid var(--line);border-radius:4px;background:var(--field);color:var(--ink);font:inherit}
+.pc-tools input{width:200px}
+.pc-tools select{min-width:110px}
+.pc-count{padding:8px 0;font-size:12px;color:var(--muted)}
+.pc-browse{margin-left:auto}
+.pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(225px,100%),1fr));gap:14px}
+.pc-card{min-width:0;display:grid;gap:7px;align-content:start;padding:12px;border:1px solid var(--line);border-radius:7px;background:var(--panel);overflow-wrap:anywhere}
+.pc-card h3,.pc-card p{margin:0}.pc-card h3{font-size:16px}.pc-card p{font-size:12px;color:var(--muted)}
+.pc-card>img{display:block;width:100%;height:115px;object-fit:cover;border-radius:4px}
+.pc-card>[data-collection-remove]{justify-self:start}
+.pc-creator{display:flex;align-items:center;gap:8px;padding:0;border:0;background:none;color:var(--ink);text-align:left}
+.pc-creator span{display:grid;place-items:center;width:36px;height:36px;flex:none;border-radius:50%;background:var(--raised);color:var(--accent-ink)}
+.pc-actions{display:flex;flex-wrap:wrap;gap:5px}
+.pc-empty{margin:0;text-align:center}
+@media(max-width:520px){.pc-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.pc-tools input{width:min(200px,100%)}.pc-tools label:has(input){width:100%}}

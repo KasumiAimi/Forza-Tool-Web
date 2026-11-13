@@ -22,6 +22,7 @@ const updateHost=$('#homeActivity');
 updateHost.innerHTML='<div class="activity-tabs" role="tablist" aria-label="收藏更新分类"><button id="activityTab-tuning" role="tab" aria-controls="activityPanel" data-activity-type="tuning">调校</button><button id="activityTab-livery" role="tab" aria-controls="activityPanel" data-activity-type="livery">涂装</button></div><p class="activity-period">最近 7 天 · 演示更新</p><div id="activityPanel" role="tabpanel" tabindex="0"><p id="activityStatus" role="status" aria-live="polite"></p><div id="activityList"></div></div><button id="expandHomeUpdates" class="activity-expand" aria-controls="activityList" hidden></button>';
 function activityTime(iso){return new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(iso));}
 function renderHomeUpdates(){
+ const summary=$('#activitySubSummary');if(summary)summary.textContent=`★ ${collected.size} 车 · ♥ ${followed.size} 人`;
  const list=ActivityFeed.select({updates:homeUpdates,carIds:collected,creatorIds:followed,type:homeUpdateType});
  updateHost.querySelectorAll('[data-activity-type]').forEach(button=>{
   const active=button.dataset.activityType===homeUpdateType;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;

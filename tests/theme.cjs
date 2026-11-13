@@ -33,9 +33,9 @@ const {openHeader,headerRoute}=require('./header-helpers.cjs');
     assert.equal(await page.locator('html').getAttribute('data-theme'),theme);
     assert.equal(await page.locator('#pageTitle').textContent(),title);
    }
-   await page.locator('#logo').click();await page.locator('#homeCars [data-car]').first().click();
+   await page.locator('#logo').click();await page.locator('#homeCars [data-garage-car]').first().click();
    await page.locator('.tune').first().waitFor();
-   assert.equal(await page.locator('.vehicle-masthead-copy h2').evaluate(node=>getComputedStyle(node).color),palette.ink,'vehicle title must adapt to the theme');
+   assert.equal(await page.locator('.vehicle-masthead-copy h2').evaluate(node=>getComputedStyle(node).color),'rgb(41, 50, 56)','light display lettering remains dark for contrast in both themes');
    await page.screenshot({path:path.join(__dirname,`主题-${theme}-详情.png`),fullPage:true});
    await page.locator('#control').click();await page.locator('#editFromDrawer').click();await page.locator('#nickname[open]').waitFor();
    await page.locator('#nickname [data-close]').first().click();await page.locator('#logo').click();
@@ -43,17 +43,14 @@ const {openHeader,headerRoute}=require('./header-helpers.cjs');
     await page.setViewportSize({width,height:900});
     await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${theme} overflow ${width}`);
-    const cards=page.locator('#homeCars .reference-car-card:visible');
-    const minimumColumns=width>1100?4:width>=1024?5:width>=900?4:width>=699?3:2;
-    const first=await cards.first().boundingBox();
-    const boxes=await cards.evaluateAll(nodes=>nodes.map(node=>({y:node.getBoundingClientRect().y})));
-    const columns=boxes.filter(box=>Math.abs(box.y-first.y)<1).length;
-    assert(columns>=minimumColumns,`${theme} at least ${minimumColumns} cards must fit at ${width}px`);
-    for(let index=1;index<columns;index++){
-     const previous=await cards.nth(index-1).boundingBox(),cardBox=await cards.nth(index).boundingBox();
-     assert(Math.abs(cardBox.y-first.y)<1&&cardBox.x>=previous.x+previous.width,`${theme} ${columns} cards must fit in one row at ${width}px`);
-    }
-    assert(new Set(boxes.map(box=>Math.round(box.y))).size<=(width>1100?2:1),`${theme} recommendation row limit ${width}px`);
+    const garage=page.locator('#homeCars .home-garage-tier');
+    const rows=await garage.locator('.garage-row').evaluateAll(nodes=>nodes.map(row=>({
+     columns:Number(row.style.getPropertyValue('--row-columns')),
+     cars:row.querySelectorAll('.garage-car').length,
+     background:getComputedStyle(row).backgroundImage
+    })));
+    assert.equal(rows.reduce((total,row)=>total+row.cars,0),7);
+    assert(rows.every(row=>row.cars<=row.columns&&row.background.includes('garage-level-v3')));
     const personal=await page.locator('.reference-personal-section').boundingBox(),recommend=await page.locator('.discover-section').boundingBox();
     if(width>1100){
      const photo=await page.locator('.photo-feature').boundingBox(),highlights=await page.locator('.reference-highlights').boundingBox();

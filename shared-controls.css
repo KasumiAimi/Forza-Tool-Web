@@ -1,0 +1,49 @@
+/* Shared control appearance. Page scenes retain their own surfaces and accents. */
+#subpage :is(.vehicle-tools input,.vehicle-tools select,.vehicle-advanced select,.pc-tools input,.pc-tools select,.gg-search input,.wa-filter-fields input,.wa-filter-fields select,.lc-season select){min-height:44px;border:1px solid var(--border-strong);border-radius:6px;background:var(--field);color:var(--ink);font-size:13px;box-shadow:none}
+#subpage :is(.vehicle-tools input,.vehicle-tools select,.vehicle-advanced select,.pc-tools input,.pc-tools select,.gg-search input,.wa-filter-fields input,.wa-filter-fields select,.lc-season select):hover{border-color:var(--accent-ink)}
+#subpage :is(.vehicle-tools input,.vehicle-tools select,.vehicle-advanced select,.pc-tools input,.pc-tools select,.gg-search input,.wa-filter-fields input,.wa-filter-fields select,.lc-season select):focus-visible{outline:2px solid var(--accent-ink);outline-offset:3px}
+#subpage .garage-control :is(input,select),#subpage .garage-brand button,#subpage .garage-clear{min-height:44px;height:44px;border-radius:6px;font-size:13px}
+#subpage .garage-control :is(input,select):focus-visible,#subpage .garage-brand button:focus-visible{outline:2px solid var(--garage-accent);outline-offset:3px}
+#subpage .lc-center .lc-search{min-height:44px;border-radius:6px;border-color:var(--border-strong)}
+#subpage .lc-center .lc-search input{font-size:13px}
+#subpage .lc-center .lc-search:focus-within{border-color:var(--lc-accent)}
+#subpage :is(.pc-tools label,.vehicle-tools label,.garage-control>span,.gg-search,.lc-season select){font-size:12px}
+#subpage :is(.brand-trigger,.pc-browse,.bm-features button,.bm-clear,.wa-reset,.gg-levels button,.sw-filters button){min-height:40px;border-radius:6px;font-size:13px}
+#subpage :is(.bm-features button,.brand-trigger){border-color:var(--border-strong);background:var(--field);color:var(--secondary)}
+#subpage .bm-features button[aria-pressed=true]{border-color:var(--selected-border);background:var(--selected);color:var(--selected-ink)}
+#subpage :is(.bm-features button,.brand-trigger,.copy-tuner):hover{border-color:var(--accent-ink)}
+#subpage :is(button,input,select,textarea):focus-visible,dialog :is(button,input,select,textarea):focus-visible{outline:2px solid var(--accent-ink);outline-offset:3px}
+#subpage :is(button,input,select):disabled,dialog button:disabled{opacity:.45;cursor:not-allowed}
+#brands,#nickname,#photoSubmission,dialog.bm-detail-dialog{border-radius:6px}
+#brands :is(.close),#nickname :is(.close),#photoSubmission :is(.close),.bm-dialog-heading button{min-width:36px;min-height:36px;border-radius:6px}
+/* One capsule tracks the selected option, including when a row wraps. */
+.ui-tab-group{position:relative}
+.ui-tab-group>.ui-selection-indicator{position:absolute;z-index:3;left:0;top:0;width:var(--ui-indicator-width,0px);height:3px;border-radius:999px;background:var(--ui-selection-color,var(--accent));transform:translate3d(var(--ui-indicator-x,0px),var(--ui-indicator-y,0px),0);transition:transform .22s ease,width .22s ease;pointer-events:none}
+.ui-tab-group>button{min-height:44px}
+:is(.bm-types,.bm-sorts,.wa-view-switch,.wa-categories,.pc-tabs,.cp-tabs,.gg-levels,.garage-modes,.sw-filters).ui-tab-group>button{border:0;border-radius:5px 5px 0 0;background:transparent;color:var(--secondary);box-shadow:none;transform:none}
+:is(.bm-types,.bm-sorts,.wa-view-switch,.wa-categories,.pc-tabs,.cp-tabs,.gg-levels,.garage-modes,.sw-filters).ui-tab-group>button:is([aria-pressed=true],[aria-selected=true],.active){background:transparent;color:var(--ink);font-weight:800;box-shadow:none;transform:none}
+:is(.bm-types,.bm-sorts,.wa-view-switch,.wa-categories,.pc-tabs,.cp-tabs,.gg-levels,.sw-filters).ui-tab-group>button:hover{background:var(--hover);color:var(--ink)}
+.garage-modes.ui-tab-group>button{color:var(--garage-hud-muted)}.garage-modes.ui-tab-group>button.active{color:var(--garage-hud-ink)}.garage-modes.ui-tab-group>button:hover{background:var(--garage-control-bg);color:var(--garage-hud-ink)}
+.bm-types.ui-tab-group{gap:5px}.bm-sorts.ui-tab-group{gap:8px}.bm-sorts.ui-tab-group>button{padding:8px 12px;font-size:13px}
+.wa-view-switch.ui-tab-group{padding-bottom:0}.wa-categories.ui-tab-group{gap:2px}
+.pc-tabs.ui-tab-group{padding:5px}.cp-tabs.ui-tab-group{gap:3px}.gg-levels.ui-tab-group{gap:2px}
+.rk-categories.ui-tab-group,.rk-periods.ui-tab-group{--ui-selection-color:var(--rk-yellow)}
+.lc-views.ui-tab-group,.lc-groups.ui-tab-group{--ui-selection-color:var(--lc-accent)}
+.vehicle-screen-tabs.ui-tab-group{--ui-selection-color:var(--workshop-accent)}
+@media(max-width:700px){#subpage :is(.vehicle-tools input,.vehicle-tools select,.pc-tools input,.pc-tools select,.wa-filter-fields input,.wa-filter-fields select){max-width:100%}.bm-types.ui-tab-group>button{font-size:13px;padding:9px 11px}.bm-sorts.ui-tab-group{gap:3px}.bm-sorts.ui-tab-group>button{padding:8px 9px}.wa-categories.ui-tab-group>button{padding:8px 9px}}
+@media(prefers-reduced-motion:reduce){.ui-tab-group>.ui-selection-indicator{transition:none}}
+
+/* Compact ranking screen retains room for the scrollable list. */
+@media(max-height:550px){.rk-categories.ui-tab-group>button,.rk-periods.ui-tab-group>button{min-height:0}}
+:is(.cp-filters,.library-pills .pills).ui-tab-group>button{min-height:40px;border:0;border-radius:5px 5px 0 0;background:transparent;color:var(--secondary);box-shadow:none}
+:is(.cp-filters,.library-pills .pills).ui-tab-group>button[aria-pressed=true]{background:transparent;color:var(--ink);font-weight:800;box-shadow:none}
+:is(.cp-filters,.library-pills .pills).ui-tab-group>button:hover{background:var(--hover);color:var(--ink)}
+.bm-drawer-groups button,.bm-drawer-footer button{min-height:40px;border-radius:6px}
+.wa-week-controls select{min-height:44px;border-radius:6px}
+
+/* Prevent wide car cutouts from overflowing the creator's narrow garage. */
+.cp-garage{overflow:hidden}
+/* Shared search and compact copy actions. Preserve each scene's material. */
+.site-header .global-search{min-height:44px;border-radius:6px}
+#subcontent :is(.bm-code button,.lc-share-code button,.vehicle-livery-copy,.sw-copy){min-height:32px;border-radius:6px}
+#subcontent .vehicle-livery-copy{min-width:32px}

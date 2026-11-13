@@ -49,5 +49,4 @@ $('#clearGlobalSearch').onclick=()=>{globalSearchInput.value='';globalSearchInpu
 globalSearchForm.addEventListener('focusout',event=>{if(!globalSearchForm.contains(event.relatedTarget))closeGlobalSearch();});
 document.addEventListener('click',event=>{if(!globalSearchForm.contains(event.target))closeGlobalSearch();});
 document.addEventListener('keydown',event=>{if((event.ctrlKey||event.metaKey)&&!event.altKey&&event.key.toLowerCase()==='k'&&!document.querySelector('dialog[open]')){event.preventDefault();globalSearchInput.focus();globalSearchInput.select();updateGlobalSearch();}});
-const navigateBeforeGlobalSearch=navigate;
-navigate=function(route,push=true){closeGlobalSearch();navigateBeforeGlobalSearch(route,push);};
+onBeforeNavigate(closeGlobalSearch);

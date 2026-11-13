@@ -1,0 +1,45 @@
+/* The livery grid shares the detail page's metal palette in both themes. */
+.vehicle-livery-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.vehicle-livery-heading h2{margin:0;color:var(--workshop-ink);font-size:14px;font-weight:800}
+.vehicle-livery-heading h2 small{margin-left:8px;color:var(--workshop-muted);font-size:11px;font-weight:500}
+.vehicle-livery-heading>span{padding:4px 7px;border:1px solid var(--workshop-frame);border-radius:3px;color:var(--workshop-accent);font-size:10px}
+.vehicle-livery-demo-note{margin:9px 0 16px;color:var(--workshop-muted);font-size:11px;line-height:1.7}
+.vehicle-livery-row-group+.vehicle-livery-row-group{margin-top:14px}
+.vehicle-livery-row{display:grid;grid-template-columns:repeat(var(--livery-columns,3),minmax(0,1fr));gap:12px}
+.vehicle-livery-card{position:relative;min-width:0;border:1px solid var(--workshop-edge);border-radius:4px;background:linear-gradient(115deg,var(--workshop-row-high),var(--workshop-row-low));box-shadow:0 3px 5px var(--workshop-shadow),inset 0 1px var(--workshop-glint)}
+.vehicle-livery-card.is-open{border-color:var(--workshop-accent);box-shadow:0 0 0 1px var(--workshop-accent),0 3px 5px var(--workshop-shadow)}
+.vehicle-livery-open{display:flex;flex-direction:column;gap:16px;min-width:0;width:100%;padding:17px 14px 15px;text-align:left;border:0;border-radius:3px;background:transparent;color:var(--workshop-ink)}
+.vehicle-livery-open:hover{background:var(--workshop-glint)}
+.vehicle-livery-card-head{display:flex;justify-content:space-between;gap:8px;align-items:center;width:100%;min-width:0}
+.vehicle-livery-card-head strong{min-width:0;font-size:14px;font-weight:850;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vehicle-livery-card-head>span{flex:none;font-size:17px;line-height:1;color:var(--workshop-accent)}
+.vehicle-livery-code{display:flex;flex-direction:column;gap:5px;max-width:100%;padding-right:22px}
+.vehicle-livery-code small{font-size:9px;color:var(--workshop-muted)}
+.vehicle-livery-code>span{font:700 13px/1.25 Consolas,'Courier New',monospace;letter-spacing:.035em;white-space:nowrap;color:var(--workshop-secondary)}
+.vehicle-livery-tags{display:flex;flex-wrap:wrap;gap:5px;min-width:0}
+.vehicle-livery-tags>span{padding:4px 6px;border:1px solid var(--workshop-frame);border-radius:2px;background:var(--workshop-metal-low);color:var(--workshop-secondary);font-size:10px;line-height:1}
+.vehicle-livery-copy{position:absolute;top:71px;right:9px;display:grid;place-items:center;width:26px;height:26px;border:1px solid var(--workshop-frame);border-radius:3px;background:linear-gradient(var(--workshop-button-high),var(--workshop-button-low));color:var(--workshop-secondary);font-size:13px;box-shadow:inset 0 1px var(--workshop-glint)}
+.vehicle-livery-copy:hover{color:var(--workshop-ink);border-color:var(--workshop-accent)}
+.vehicle-livery-drawer{position:relative;margin-top:12px;padding:15px;border:1px solid var(--workshop-frame);border-top:2px solid var(--workshop-accent);border-radius:4px;background:linear-gradient(120deg,var(--workshop-metal-low),var(--workshop-metal));box-shadow:inset 0 2px 8px var(--workshop-shadow)}
+.vehicle-livery-drawer-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:12px}
+.vehicle-livery-drawer-heading>div{display:flex;align-items:baseline;gap:10px;min-width:0}
+.vehicle-livery-drawer-heading strong{color:var(--workshop-ink);font-size:13px}
+.vehicle-livery-drawer-heading small{color:var(--workshop-muted);font-size:10px}
+.vehicle-livery-drawer-heading>button{flex:none;width:26px;height:26px;border:1px solid var(--workshop-frame);border-radius:3px;background:var(--workshop-button-low);color:var(--workshop-secondary);font-size:19px;line-height:1}
+.vehicle-livery-viewer{position:relative;height:218px;overflow:hidden;border:1px solid var(--workshop-edge);border-radius:3px;background:var(--workshop-metal-low);box-shadow:inset 0 2px 8px var(--workshop-shadow)}
+.vehicle-livery-image{height:100%;width:100%}
+.vehicle-livery-image>img{display:block;width:100%;height:100%;object-fit:contain}
+.vehicle-livery-image-placeholder{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;background:radial-gradient(ellipse at center,var(--workshop-row-high),var(--workshop-metal-low));color:var(--workshop-muted)}
+.vehicle-livery-image-placeholder svg{width:49px;height:37px;margin-bottom:5px;fill:none;stroke:currentColor;stroke-width:1.3;opacity:.65}
+.vehicle-livery-image-placeholder strong{font-size:13px;font-weight:600;color:var(--workshop-secondary)}
+.vehicle-livery-image-placeholder>span{font-size:11px}
+.vehicle-livery-arrow{position:absolute;z-index:1;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:32px;height:43px;border:1px solid var(--workshop-frame);border-radius:4px;background:linear-gradient(var(--workshop-button-high),var(--workshop-button-low));color:var(--workshop-ink);font-size:29px;line-height:1;box-shadow:0 2px 4px var(--workshop-shadow)}
+.vehicle-livery-arrow.previous{left:12px}.vehicle-livery-arrow.next{right:12px}
+.vehicle-livery-arrow:hover{border-color:var(--workshop-accent)}
+.vehicle-livery-view-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}
+.vehicle-livery-view-choices{display:flex;gap:6px;min-width:0;flex-wrap:wrap}
+.vehicle-livery-view-choices button{padding:6px 9px;border:1px solid var(--workshop-frame);border-radius:3px;background:transparent;color:var(--workshop-muted);font-size:10px;line-height:1.2}
+.vehicle-livery-view-choices button[aria-pressed=true]{border-color:var(--workshop-accent);background:var(--workshop-button-low);color:var(--workshop-ink)}
+.vehicle-livery-image-status{flex:none;min-width:33px;color:var(--workshop-secondary);font:700 11px/1 Consolas,monospace;text-align:right}
+@media(max-width:1180px){.vehicle-livery-row{gap:9px}.vehicle-livery-open{padding:15px 11px}.vehicle-livery-code>span{font-size:12px;letter-spacing:0}.vehicle-livery-copy{right:6px;top:69px;width:24px;height:24px}.vehicle-livery-drawer{padding:12px}}
+@media(max-width:520px){.vehicle-livery-row{gap:10px}.vehicle-livery-open{padding:14px 11px}.vehicle-livery-card-head strong{font-size:13px}.vehicle-livery-code>span{font-size:12px}.vehicle-livery-copy{top:67px}.vehicle-livery-viewer{height:190px}.vehicle-livery-drawer{padding:11px}.vehicle-livery-drawer-heading>div{gap:6px;flex-wrap:wrap}.vehicle-livery-view-choices{gap:4px}.vehicle-livery-view-choices button{padding:6px;font-size:10px}.vehicle-livery-arrow.previous{left:8px}.vehicle-livery-arrow.next{right:8px}}

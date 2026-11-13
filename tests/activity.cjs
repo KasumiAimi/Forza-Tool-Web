@@ -15,7 +15,7 @@ const base=process.env.PREVIEW_URL||'http://127.0.0.1:8765/';
   page.on('pageerror',e=>errors.push(e.message));await page.goto(base);
   const items=page.locator('#activityList .activity-item'),expand=page.locator('#expandHomeUpdates');
   assert.equal(await items.count(),0);assert.match(await page.locator('.activity-empty').textContent(),/暂无调校更新/);
-  await page.locator('#homeCars [data-car="demo_0"]').click();await page.locator('#collectCar').click();await page.locator('#logo').click();
+  await page.locator('#homeCars [data-garage-car="demo_0"]').click();await page.locator('#collectCar').click();await page.locator('#logo').click();
   assert.equal(await items.count(),2,'car subscription yields its two recent tunes');
   assert.equal(await items.first().locator('img').count(),1);assert.match(await items.first().locator('strong').textContent(),/190E/);
   assert.equal(await items.first().locator('.activity-tags').textContent(),'A公路META');

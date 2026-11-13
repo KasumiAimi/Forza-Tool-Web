@@ -1,0 +1,82 @@
+.season-workbench{position:relative;padding-bottom:20px;color:var(--ink)}
+.sw-nav{display:flex;justify-content:flex-end;gap:5px;margin:0 0 12px}
+.sw-nav button,.sw-copy,.sw-archive button{padding:6px 12px;border:1px solid var(--line);border-radius:4px;background:var(--raised);color:var(--ink);font-size:12px}
+.sw-nav [aria-current=page]{background:var(--accent);color:#181818;border-color:transparent;font-weight:800}
+.sw-stage{
+ display:grid;grid-template-columns:minmax(245px,26%) repeat(2,minmax(0,1fr));height:192px;overflow:hidden;
+ border:1px solid var(--line);border-radius:7px;color:#f7f7f7;
+ background:linear-gradient(90deg,#13191cef,transparent 34%),linear-gradient(#303639,#141719);
+}
+.sw-season{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-width:0;overflow:hidden;padding:12px 20px 15px}
+.sw-season-mark{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.sw-season-mark text{fill:#344045;font:900 italic 250px 'Segoe UI',sans-serif}
+.sw-season-info{width:min(100%,253px)}
+.sw-season small,.sw-season p{color:#ddd;font-size:12px}
+.sw-season h2{margin:1px 0 6px;font-size:clamp(39px,4vw,51px);line-height:1.05;letter-spacing:-.05em;font-style:italic;font-weight:950;color:var(--accent);text-shadow:0 3px 10px #0009}
+.sw-season p{margin:0}
+.sw-season p b{font-size:24px;color:#ff62b2;font-style:italic}
+.sw-season progress{display:block;width:100%;height:10px;margin-top:8px;appearance:none;clip-path:polygon(2% 0,100% 0,98% 100%,0 100%);background:#495257}
+.sw-season progress::-webkit-progress-bar{background:#495257}
+.sw-season progress::-webkit-progress-value{background:linear-gradient(to left,#ff98d1 0 3px,#282f33 3px 6px,#ff85c6 6px 9px,#282f33 9px 12px,#ff85c6 12px 15px,#f64eaa 15px);transform:skewX(-24deg);transform-origin:bottom left}
+.sw-season progress::-moz-progress-bar{background:#f64eaa}
+.sw-reward{--stage-center:42%;position:relative;isolation:isolate;min-width:0;border:0;background:transparent;color:#fff}
+.sw-reward-lamp,.sw-reward-platform,.sw-reward img{position:absolute;left:var(--stage-center);transform:translateX(-50%);pointer-events:none}
+.sw-reward-lamp{top:17px;width:44%;height:3px;border-radius:2px;background:#dcf5ff;box-shadow:0 1px 14px 2px #c2edff77}
+.sw-reward-platform{width:74%;bottom:18px;height:42px;border-radius:50%;background:radial-gradient(ellipse at 50% 54%,#131719 0%,transparent 58%),linear-gradient(#596165,#333a3e);border:1px solid #727c82;box-shadow:inset 0 0 0 5px #ffffff08,0 7px 0 #15181a,0 13px 17px #000c}
+.sw-reward img{bottom:18px;width:72%;height:calc(100% - 48px);object-fit:contain;filter:drop-shadow(0 4px 3px #0009)}
+.sw-reward-caption{position:absolute;right:7%;bottom:13px;max-width:85%;text-align:right;font-style:italic;text-shadow:0 2px 4px #000,0 0 8px #d0eeff60,0 0 17px #d0eeff35}
+.sw-reward-caption>b{display:block;margin-bottom:4px;font-size:40px;line-height:1;font-weight:950}
+.sw-reward-caption small{font-size:12px}
+.sw-reward-caption strong,.sw-reward-caption strong span{display:block;font-size:13px;line-height:1.2;font-weight:900}
+button.sw-reward:focus-visible{outline-offset:-4px}
+.sw-work{display:grid;grid-template-columns:minmax(220px,26%) minmax(0,1fr);gap:18px;margin-top:18px}
+.sw-menu,.sw-detail{min-width:0;border:1px solid var(--line);border-radius:7px;background:var(--panel);overflow:hidden}
+.sw-menu-heading,.sw-table-head,.sw-foot{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sw-menu-heading{padding:12px 14px 5px}
+.sw-menu-heading h2,.sw-task h3{margin:0;font-size:17px}
+.sw-menu-heading span,.sw-table-head span,.sw-foot,.sw-task small{font-size:11px;color:var(--muted)}
+.sw-filters{display:flex;flex-wrap:wrap;gap:4px;padding:0 8px 6px}
+.sw-filters button,.sw-foot button{padding:5px 6px;border:0;background:transparent;color:var(--muted);font-size:11px}
+.sw-filters button[aria-pressed=true]{color:var(--accent-ink);font-weight:800}
+.sw-list{max-height:397px;overflow:auto;padding:0 6px 7px}
+.sw-race{display:grid;grid-template-columns:20px minmax(0,1fr) auto auto;align-items:center;gap:6px;width:100%;min-height:38px;padding:4px 7px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);text-align:left}
+.sw-race[aria-pressed=true]{border-left:3px solid var(--accent-ink);padding-left:4px;background:var(--selected);border-radius:4px}
+.sw-race:hover{background:var(--hover)}
+.sw-race strong{font-size:13px}
+.sw-race small,.sw-race i,.sw-tune i{font-size:10px;color:var(--muted)}
+.sw-rank{justify-self:end;padding:2px 5px;border-radius:3px;background:var(--raised);color:var(--ink);font-size:10px;white-space:nowrap}
+.sw-rank.level-A{background:#542b34;color:#ffc0c8}.sw-rank.level-B{background:#533a24;color:#ffcf96}
+.sw-rank.level-S1{background:#4b3151;color:#f1c6fc}.sw-rank.level-S2{background:#414856;color:#edf4ff}
+.sw-event{position:relative;isolation:isolate;min-height:123px;overflow:hidden;padding:13px 20px;color:#f7f7f7;background:linear-gradient(90deg,#151819 13%,#141719a6 61%,#1117),url('assets/home/car-library-bg-v2.jpg') center 53%/cover}
+.sw-event small,.sw-event p{color:#d1dbdb;font-size:11px}
+.sw-event h2{margin:2px 0 7px;font-size:38px;line-height:1.15;font-weight:950;font-style:italic}
+.sw-event p{margin:0}
+.sw-event .sw-rank{margin-right:5px}
+.sw-watermark{position:absolute;right:22px;bottom:-23px;z-index:-1;color:#ffffff20;font-size:145px;line-height:1;font-weight:950;font-style:italic;pointer-events:none}
+.sw-watermark[data-long]{font-size:76px;bottom:1px}
+.sw-content{padding:11px 15px 13px}
+.sw-table-head{margin-bottom:6px;font-size:14px}
+.sw-tune{display:grid;grid-template-columns:20px 83px minmax(0,1fr) minmax(85px,auto) auto;gap:10px;align-items:center;min-height:51px;margin-top:4px;padding:4px 9px;border:1px solid var(--line);border-radius:4px;background:linear-gradient(90deg,var(--raised),var(--panel));font-size:13px}
+.sw-tune img{width:100%;height:43px;object-fit:contain}
+.sw-car-link{padding:0;border:0;background:none;color:var(--ink);font-weight:750;text-align:left}
+.sw-tune strong,.sw-tune code{overflow-wrap:anywhere}
+.sw-tune code{color:var(--pink-ink);font:850 15px 'Segoe UI',sans-serif;letter-spacing:.04em}
+.sw-copy{font-size:11px;white-space:nowrap}
+.sw-prize{display:flex;align-items:center;gap:10px;margin-top:10px;padding:8px 10px;border-left:2px solid var(--gold-border);border-radius:3px;background:var(--gold-bg);color:var(--gold-ink);font-size:13px}
+.sw-prize small{font-size:10px;white-space:nowrap}
+.sw-task,.sw-empty{padding:12px;color:var(--muted)}
+.sw-task p{color:var(--ink)}
+.sw-foot{margin-top:10px}.sw-foot button{color:var(--ink);text-align:right}
+.sw-archive{max-width:calc(100vw - 40px);border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--ink)}
+.sw-archive::backdrop{background:#0009}
+@media(max-width:850px){.sw-work{grid-template-columns:minmax(180px,29%) minmax(0,1fr);gap:12px}.sw-race small{display:none}.sw-race{grid-template-columns:20px minmax(0,1fr) auto}.sw-tune{grid-template-columns:14px 54px minmax(0,1fr) auto auto;gap:6px}}
+@media(max-width:640px){
+ .sw-stage{height:auto;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sw-season{grid-column:1/-1;min-height:122px;padding:11px 13px}.sw-season h2{font-size:32px}.sw-season p b{font-size:19px}
+ .sw-reward{min-height:146px;--stage-center:50%}.sw-reward-lamp{top:9px}.sw-reward-platform{bottom:43px;height:24px}.sw-reward img{bottom:42px;width:86%;height:90px}
+ .sw-reward-caption{bottom:6px;right:7%}.sw-reward-caption>b{font-size:24px;margin-bottom:2px}.sw-reward-caption strong,.sw-reward-caption strong span{font-size:10px}
+ .sw-work{grid-template-columns:minmax(0,1fr)}.sw-list{max-height:174px}.sw-race small{display:block}.sw-race{grid-template-columns:20px minmax(0,1fr) auto auto}
+ .sw-event h2{font-size:30px}.sw-watermark{font-size:105px;bottom:-13px}.sw-watermark[data-long]{font-size:55px}
+ .sw-tune{grid-template-columns:49px minmax(0,1fr) auto;padding:5px 6px}.sw-tune i{display:none}.sw-tune img{grid-row:span 2}.sw-tune code{grid-column:2;font-size:13px}.sw-copy{grid-column:3;grid-row:span 2;padding:5px 6px}
+ .sw-content{padding:10px}.sw-foot{align-items:flex-start}
+}

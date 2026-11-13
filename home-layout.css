@@ -3,17 +3,19 @@
 #home [hidden]{display:none!important}
 .reference-home #home main{display:block}
 .reference-home #home{padding-bottom:26px}
-.reference-welcome{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 0 22px}
+.reference-welcome{position:relative;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 0 22px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+.reference-welcome::after{content:"";position:absolute;left:0;bottom:-1px;width:96px;height:2px;border-radius:999px;background:linear-gradient(90deg,var(--accent-ink),var(--pink))}
 .reference-welcome .eyebrow{display:none}
 .reference-welcome h1{font-size:28px;margin:0;line-height:1.4}
 .reference-welcome h1>span{display:inline}
 .reference-welcome p{margin:5px 0 0;font-size:12px;line-height:1.7}
-.reference-welcome time{white-space:nowrap;font-size:11px}
+.reference-welcome time{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-size:12px;font-weight:700;padding:7px 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--home-card-shadow);color:var(--secondary)}
+.reference-welcome time::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 8px var(--pink);flex:none}
 .reference-home-layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:20px 22px;align-items:start}
 .reference-main-column{min-width:0}
 .reference-feature-row{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(270px,1fr);gap:18px;align-items:stretch;height:clamp(290px,calc(100svh - 480px),370px)}
 .reference-highlights{display:grid;grid-template-rows:minmax(164px,1.35fr) minmax(110px,1fr);gap:12px;min-width:0;min-height:0}
-.reference-home .photo-feature{height:100%;min-height:0;margin:0;min-width:0}
+.reference-home .photo-feature{height:100%;min-height:0;margin:0;min-width:0;box-shadow:var(--home-showcase-shadow);border:1px solid var(--line)}
 .reference-home .photo-feature-top{padding:18px 22px;flex-direction:row;align-items:center;gap:10px}
 .reference-home .photo-label{font-size:9px;letter-spacing:1px}
 .reference-home .photo-submit{padding:9px 12px;font-size:10px;white-space:nowrap}
@@ -28,32 +30,7 @@
 .reference-home .photo-carousel-bottom{left:26px;right:22px;bottom:18px;gap:12px}
 .reference-home .photo-arrows button{height:28px;min-width:28px;font-size:12px}
 .reference-highlights .dashboard-card{grid-row:auto;min-width:0;min-height:0}
-.reference-home .dashboard-season .week-panel{height:100%;padding:14px 16px;display:grid;grid-template-columns:86px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;gap:8px 12px;align-items:center}
-.reference-home .dashboard-season .week-heading{grid-column:1/-1;font-size:11px;gap:10px}
-.reference-home .dashboard-season .week-heading button{font-size:10px}
-.reference-home .dashboard-season .week-title{grid-column:1;grid-row:2;margin:0;display:block}
-.reference-home .dashboard-season .week-title h2{font-size:29px;margin:0;line-height:1.2}
-.reference-home .dashboard-season .week-title>span{display:block;font-size:7px;margin-top:7px;line-height:1.5}
-.reference-home .dashboard-season .week-title b{font-size:7px}
-.reference-home .dashboard-season .week-rewards{grid-column:2;grid-row:2;display:flex;gap:6px;margin:0}
-.reference-home .dashboard-season .week-rewards button{flex:1;min-width:0;padding:5px 2px;font-size:8px}
-.reference-home .dashboard-season .week-rewards img{height:40px}
-.reference-home .dashboard-season .week-rewards b{font-size:10px}
-.reference-home .dashboard-season .week-line{display:none}
-.reference-home .dashboard-season .week-timer{grid-column:1;grid-row:3;display:block}
-.reference-home .dashboard-season .week-timer>span{display:none}
-.reference-home .dashboard-season .week-timer strong{font-size:14px;display:block;margin:0;white-space:nowrap}
-.reference-home .dashboard-season .week-timer small{font-size:8px;margin:0 3px}
-.reference-home .dashboard-season .week-action{grid-column:2;grid-row:3;margin:0;padding:0;border:0;font-size:10px}
-.reference-home .dashboard-league{padding:13px 16px;display:flex;flex-direction:column;justify-content:center}
-.reference-home .dashboard-league .section-heading{align-items:center;gap:10px}
-.reference-home .dashboard-league h3{font-size:12px;line-height:1.5;white-space:nowrap}
-.reference-home .dashboard-league .section-heading button{font-size:9px}
-.reference-home .dashboard-league .poster{height:29px;min-height:0;margin:7px 0;font-size:12px}
-.reference-home .dashboard-league .poster span{display:none}
-.reference-home .dashboard-league .contact{font-size:9px;padding:6px 8px}
-.reference-home .dashboard-league .contact span{font-size:8px}
-#home .reference-profile-rail{display:block;min-width:0;padding:20px;align-self:start;max-height:370px;overflow:auto}
+#home .reference-profile-rail{display:flex;flex-direction:column;min-width:0;padding:20px;align-self:start;max-height:370px;overflow:auto}
 .reference-profile-rail .dashboard-card-heading{align-items:center;gap:10px}
 .reference-profile-rail .dashboard-card-heading h3{font-size:13px;margin:0}
 .reference-profile-rail .dashboard-card-heading button{font-size:9px;white-space:nowrap}
@@ -68,105 +45,48 @@
 .reference-discover-tabs button{font-size:12px;white-space:nowrap;padding:8px 0}
 .reference-home .discover-section .text-link{order:2;margin-left:auto;white-space:nowrap;font-size:11px}
 .reference-home #homeCars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.reference-car-card{min-width:0}
-.reference-car-card .vehicle{display:grid;grid-template-columns:43% minmax(0,1fr);width:100%;height:100%;min-height:158px}
-.reference-home .reference-car-card .vehicle-image{height:100%;min-height:158px}
-.reference-home .reference-car-card .vehicle-image img{padding:20px 10px 10px}
-.reference-home .reference-car-card .vehicle-info{padding:17px 14px;min-width:0;align-self:center}
-.reference-home .reference-car-card .vehicle-info>p{font-size:9px}
-.reference-home .reference-car-card .vehicle-info h3{font-size:14px;line-height:1.5;margin:8px 0 14px;overflow-wrap:anywhere;min-height:42px}
-.reference-home .reference-car-card .vehicle-bottom{display:block}
-.reference-home .reference-car-card .vehicle-bottom>span{display:block;font-size:9px;margin-top:12px}
-.reference-home .reference-car-card .tags{gap:4px;flex-wrap:wrap}
-.reference-home .reference-car-card .tags>span{font-size:9px;padding:3px 5px}
-.reference-home .reference-car-card .level-badges{top:10px;left:10px;gap:4px}
-.reference-home .reference-car-card .level-badges b{font-size:8px}
-.reference-home .reference-car-card .vehicle-open{top:10px;right:10px;font-size:11px}
 .reference-tab-empty{grid-column:1/-1;min-height:158px;padding:18px 24px;margin:0;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
 .reference-tab-empty h3{font-size:17px;margin:0}.reference-tab-empty p{font-size:11px;margin:0}.reference-tab-empty>span{font-size:22px}
 .reference-home .site-footer{padding-top:18px;padding-bottom:18px}
 @media(min-width:701px) and (max-height:800px){.reference-welcome{padding:12px 0 14px}.reference-welcome h1{font-size:26px;line-height:1.35}.reference-welcome p{font-size:11px;margin-top:4px}}
-@media(min-width:1600px){.reference-home #home{max-width:1500px}.reference-feature-row{height:clamp(320px,calc(100svh - 480px),400px)}.reference-home .photo-feature-copy h1{font-size:34px}.reference-car-card .vehicle{min-height:180px}}
-@media(max-width:1200px){.reference-home-layout{grid-template-columns:minmax(0,1fr) 235px;gap:18px}.reference-feature-row{grid-template-columns:minmax(0,1.4fr) minmax(265px,1fr);gap:15px}.reference-home .photo-feature-top{padding:16px;flex-direction:column;align-items:flex-start}.reference-home .photo-feature-copy{left:20px;right:20px;bottom:65px}.reference-home .photo-feature-copy h1{font-size:27px}.reference-home .photo-carousel-bottom{left:20px;right:16px;gap:8px}.reference-home .photo-dots{gap:5px}.reference-home .photo-dots button{width:12px}.reference-home .photo-dots button[aria-pressed=true]{width:22px}.reference-home #homeCars{gap:14px}.reference-home .reference-car-card .vehicle-info{padding:14px 12px}.reference-home .reference-car-card .vehicle-info h3{font-size:13px}.reference-home .discover-section .web-section-heading{gap:22px}}
-@media(max-width:1100px) and (min-width:701px){.reference-main-column{grid-column:1/-1}.reference-home-layout{grid-template-columns:minmax(0,1fr) 235px}.reference-home .discover-section{grid-column:1;grid-row:2}.reference-profile-rail{grid-column:2;grid-row:2}.reference-feature-row{grid-template-columns:minmax(0,1.8fr) 310px;height:320px}.reference-home #homeCars{grid-template-columns:1fr}.reference-car-card .vehicle{grid-template-columns:140px minmax(0,1fr);min-height:130px}.reference-home .reference-car-card .vehicle-image{min-height:130px}.reference-home .reference-car-card .vehicle-info h3{min-height:0;margin-bottom:10px}.reference-home .reference-car-card .vehicle-bottom{display:flex;align-items:center;gap:10px}.reference-home .reference-car-card .vehicle-bottom>span{margin:0}.reference-home .discover-section .web-section-heading{flex-wrap:wrap;gap:6px 20px}.reference-home .discover-section .web-section-heading h2{font-size:20px}.reference-discover-tabs{order:3;flex-basis:100%;align-self:auto}}
-@media(max-width:700px){.reference-welcome{padding:19px 0 22px;gap:10px;align-items:flex-start}.reference-welcome>div{min-width:0}.reference-welcome h1{font-size:24px}.reference-welcome h1>span{display:inline}.reference-welcome p{font-size:10px;max-width:260px}.reference-welcome time{font-size:9px;padding-top:6px}.reference-home-layout{grid-template-columns:1fr;gap:18px}.reference-feature-row{grid-template-columns:1fr;height:auto;gap:14px}.reference-home .photo-feature{height:340px;min-height:0}.reference-home .photo-feature-top{flex-direction:row;justify-content:space-between;padding:18px;align-items:center}.reference-home .photo-label{font-size:8px;letter-spacing:0}.reference-home .photo-submit{font-size:9px;padding:8px}.reference-home .photo-submit span{margin-left:4px}.reference-home .photo-feature-copy{left:22px;right:22px;bottom:74px}.reference-home .photo-feature-copy h1{font-size:28px;margin-top:12px}.reference-home .photo-feature-copy>span{font-size:9px}.reference-home .photo-feature-actions{gap:16px}.reference-home .photo-feature-actions button{font-size:10px}.reference-home .photo-feature-actions #heroHit{padding:9px 11px}.reference-home .photo-carousel-bottom{left:22px;right:20px;bottom:20px}.reference-highlights{grid-template-columns:1fr;grid-template-rows:auto;gap:14px}.reference-home .dashboard-season .week-panel{min-height:170px;padding:16px 18px;grid-template-columns:90px minmax(0,1fr)}.reference-home .dashboard-season .week-rewards img{height:48px}.reference-home .dashboard-league{padding:16px 18px}.reference-home .dashboard-league .poster{height:40px}.reference-home .dashboard-league .contact{padding:9px;font-size:10px}#home .reference-profile-rail{max-height:none;padding:18px}.reference-home .discover-section{grid-column:1;grid-row:auto}.reference-home .discover-section .web-section-heading{flex-wrap:wrap;gap:5px 16px;margin-bottom:14px}.reference-home .discover-section .web-section-heading h2{font-size:20px}.reference-home .discover-section .text-link{font-size:10px}.reference-discover-tabs{order:3;flex-basis:100%;gap:24px}.reference-discover-tabs button{font-size:11px;padding:10px 0}.reference-home #homeCars{grid-template-columns:1fr;gap:12px}.reference-car-card .vehicle{grid-template-columns:40% minmax(0,1fr);min-height:145px}.reference-home .reference-car-card .vehicle-image{min-height:145px}.reference-home .reference-car-card .vehicle-info{padding:16px 14px}.reference-home .reference-car-card .vehicle-info h3{min-height:0;font-size:13px;margin-bottom:12px}.reference-home .reference-car-card .vehicle-bottom>span{margin-top:10px}.reference-tab-empty{display:block;min-height:170px;padding:22px;text-align:center}.reference-tab-empty h3{font-size:16px;margin:12px 0}.reference-tab-empty p{font-size:11px;line-height:1.8}.reference-home #home{padding-bottom:25px}}
+@media(min-width:1600px){.reference-home #home{max-width:1500px}.reference-feature-row{height:clamp(320px,calc(100svh - 480px),400px)}.reference-home .photo-feature-copy h1{font-size:34px}}
+@media(max-width:1200px){.reference-home-layout{grid-template-columns:minmax(0,1fr) 235px;gap:18px}.reference-feature-row{grid-template-columns:minmax(0,1.4fr) minmax(265px,1fr);gap:15px}.reference-home .photo-feature-top{padding:16px;flex-direction:column;align-items:flex-start}.reference-home .photo-feature-copy{left:20px;right:20px;bottom:65px}.reference-home .photo-feature-copy h1{font-size:27px}.reference-home .photo-carousel-bottom{left:20px;right:16px;gap:8px}.reference-home .photo-dots{gap:5px}.reference-home .photo-dots button{width:12px}.reference-home .photo-dots button[aria-pressed=true]{width:22px}.reference-home #homeCars{gap:14px}.reference-home .discover-section .web-section-heading{gap:22px}}
+@media(max-width:1100px) and (min-width:701px){.reference-main-column{grid-column:1/-1}.reference-home-layout{grid-template-columns:minmax(0,1fr) 235px}.reference-home .discover-section{grid-column:1;grid-row:2}.reference-profile-rail{grid-column:2;grid-row:2}.reference-feature-row{grid-template-columns:minmax(0,1.8fr) 310px;height:320px}.reference-home #homeCars{grid-template-columns:1fr}.reference-home .discover-section .web-section-heading{flex-wrap:wrap;gap:6px 20px}.reference-home .discover-section .web-section-heading h2{font-size:20px}.reference-discover-tabs{order:3;flex-basis:100%;align-self:auto}}
+@media(max-width:700px){.reference-welcome{padding:19px 0 18px;gap:10px;align-items:flex-start}.reference-welcome>div{min-width:0}.reference-welcome h1{font-size:24px}.reference-welcome h1>span{display:inline}.reference-welcome p{font-size:10px;max-width:260px}.reference-welcome time{font-size:10px;padding:5px 10px}.reference-home-layout{grid-template-columns:1fr;gap:18px}.reference-feature-row{grid-template-columns:1fr;height:auto;gap:14px}.reference-home .photo-feature{height:340px;min-height:0}.reference-home .photo-feature-top{flex-direction:row;justify-content:space-between;padding:18px;align-items:center}.reference-home .photo-label{font-size:8px;letter-spacing:0}.reference-home .photo-submit{font-size:9px;padding:8px}.reference-home .photo-submit span{margin-left:4px}.reference-home .photo-feature-copy{left:22px;right:22px;bottom:74px}.reference-home .photo-feature-copy h1{font-size:28px;margin-top:12px}.reference-home .photo-feature-copy>span{font-size:9px}.reference-home .photo-feature-actions{gap:16px}.reference-home .photo-feature-actions button{font-size:10px}.reference-home .photo-feature-actions #heroHit{padding:9px 11px}.reference-home .photo-carousel-bottom{left:22px;right:20px;bottom:20px}.reference-highlights{grid-template-columns:1fr;grid-template-rows:auto;gap:14px}#home .reference-profile-rail{max-height:none;padding:18px}.reference-home .discover-section{grid-column:1;grid-row:auto}.reference-home .discover-section .web-section-heading{flex-wrap:wrap;gap:5px 16px;margin-bottom:14px}.reference-home .discover-section .web-section-heading h2{font-size:20px}.reference-home .discover-section .text-link{font-size:10px}.reference-discover-tabs{order:3;flex-basis:100%;gap:24px}.reference-discover-tabs button{font-size:11px;padding:10px 0}.reference-home #homeCars{grid-template-columns:1fr;gap:12px}.reference-tab-empty{display:block;min-height:170px;padding:22px;text-align:center}.reference-tab-empty h3{font-size:16px;margin:12px 0}.reference-tab-empty p{font-size:11px;line-height:1.8}.reference-home #home{padding-bottom:25px}}
 
 /* Spacious revision: two broad rows and natural scrolling. */
 @media(min-width:701px){
- .reference-welcome{padding:28px 0 30px}.reference-welcome h1{font-size:28px;line-height:1.4}.reference-welcome p{font-size:12px;margin-top:8px}
+ .reference-welcome{padding:28px 0 24px}.reference-welcome h1{font-size:28px;line-height:1.4}.reference-welcome p{font-size:12px;margin-top:8px}
  .reference-home-layout{grid-template-columns:minmax(0,1fr) 290px;gap:34px 28px}
  .reference-main-column{grid-column:1/-1}
  .reference-feature-row{grid-template-columns:minmax(0,1.9fr) minmax(340px,1fr);height:390px;gap:26px}
  .reference-highlights{grid-template-rows:minmax(0,1.6fr) minmax(0,1fr);gap:20px}
  .reference-home .photo-feature-top{padding:24px 28px;flex-direction:row;align-items:center}.reference-home .photo-label{font-size:10px}.reference-home .photo-submit{font-size:11px;padding:11px 15px}
  .reference-home .photo-feature-copy{left:34px;right:34px;bottom:90px}.reference-home .photo-feature-copy>span{font-size:12px}.reference-home .photo-feature-copy h1{font-size:35px;margin-top:18px;line-height:1.4}.reference-home .photo-feature-actions{margin-top:20px;gap:25px}.reference-home .photo-feature-actions button{font-size:12px}.reference-home .photo-feature-actions #heroHit{padding:12px 17px}.reference-home .photo-carousel-bottom{left:34px;right:28px;bottom:24px}.reference-home .photo-arrows button{height:32px;min-width:32px}
- .reference-home .dashboard-season .week-panel{padding:21px 24px;gap:14px 20px;grid-template-columns:100px minmax(0,1fr)}.reference-home .dashboard-season .week-heading{font-size:12px}.reference-home .dashboard-season .week-heading button{font-size:11px}.reference-home .dashboard-season .week-title h2{font-size:35px}.reference-home .dashboard-season .week-title>span{font-size:8px;margin-top:10px}.reference-home .dashboard-season .week-rewards{gap:10px}.reference-home .dashboard-season .week-rewards button{padding:8px 4px;font-size:9px}.reference-home .dashboard-season .week-rewards img{height:58px}.reference-home .dashboard-season .week-timer>span{display:block;font-size:9px;margin-bottom:5px}.reference-home .dashboard-season .week-timer strong{font-size:17px}.reference-home .dashboard-season .week-action{font-size:12px}
- .reference-home .dashboard-league{padding:20px 24px}.reference-home .dashboard-league h3{font-size:13px}.reference-home .dashboard-league .section-heading button{font-size:10px}.reference-home .dashboard-league .poster{height:40px;margin:10px 0;font-size:14px}.reference-home .dashboard-league .contact{padding:8px 10px;font-size:10px}
  #home .reference-profile-rail{grid-column:2;grid-row:2;padding:24px;max-height:none}.reference-profile-rail .dashboard-card-heading h3{font-size:14px}.reference-home #homeActivity{margin-top:22px}.reference-home #homeActivity .drawer-empty{padding:17px}.reference-home #homeActivity .drawer-update strong{font-size:13px}.reference-home #homeActivity .drawer-update span{font-size:11px;line-height:1.9}
  .reference-home .discover-section{grid-column:1;grid-row:2}.reference-home .discover-section .web-section-heading{gap:24px;margin-bottom:22px;min-height:43px;flex-wrap:nowrap}.reference-home .discover-section .web-section-heading h2{font-size:22px}.reference-discover-tabs{order:1;flex-basis:auto;gap:24px;align-self:stretch}.reference-discover-tabs button{font-size:12px;padding:11px 0}
- .reference-home #homeCars{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.reference-home .reference-car-card .vehicle{display:block;min-height:0}.reference-home .reference-car-card .vehicle-image{height:160px;min-height:0}.reference-home .reference-car-card .vehicle-image img{padding:22px 15px 10px}.reference-home .reference-car-card .vehicle-info{padding:20px 18px}.reference-home .reference-car-card .vehicle-info>p{font-size:10px}.reference-home .reference-car-card .vehicle-info h3{font-size:15px;line-height:1.5;margin:10px 0 18px;min-height:45px}.reference-home .reference-car-card .vehicle-bottom{display:flex;gap:10px;flex-wrap:wrap}.reference-home .reference-car-card .vehicle-bottom>span{font-size:10px;margin:0}.reference-home .reference-car-card .tags{gap:6px}.reference-home .reference-car-card .tags>span{font-size:10px;padding:4px 6px}
+ .reference-home #homeCars{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
  .reference-tab-empty{min-height:240px;padding:30px}.reference-home #home{padding-bottom:40px}.reference-home .site-footer{padding-top:25px;padding-bottom:25px}
 }
-@media(min-width:701px) and (max-width:1100px){.reference-home-layout{grid-template-columns:minmax(0,1fr) 240px;gap:28px 22px}.reference-feature-row{grid-template-columns:minmax(0,1.5fr) 320px;height:400px;gap:22px}.reference-home .photo-feature-top{flex-direction:column;align-items:flex-start;padding:22px}.reference-home .photo-feature-copy{left:24px;right:22px;bottom:84px}.reference-home .photo-feature-copy h1{font-size:30px}.reference-home .dashboard-season .week-panel{padding:20px;grid-template-columns:80px minmax(0,1fr);gap:12px}.reference-home .dashboard-season .week-title h2{font-size:30px}.reference-home .dashboard-season .week-rewards img{height:48px}.reference-home .dashboard-league{padding:18px 20px}.reference-home .dashboard-league h3{font-size:12px}.reference-home .discover-section .web-section-heading{flex-wrap:wrap;gap:6px 20px}.reference-discover-tabs{order:3;flex-basis:100%;align-self:auto}.reference-home #homeCars{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.reference-home .reference-car-card .vehicle-image{height:150px}.reference-home .reference-car-card .vehicle-info{padding:18px 15px}}
-@media(max-width:700px){.reference-home-layout{gap:24px}.reference-feature-row{gap:20px}.reference-highlights{gap:20px}.reference-home .photo-feature{height:370px}.reference-home .dashboard-season .week-panel{padding:22px;min-height:195px;gap:14px}.reference-home .dashboard-league{padding:22px}.reference-home .dashboard-league .poster{height:50px;margin:12px 0}#home .reference-profile-rail{padding:22px}.reference-home .discover-section .web-section-heading{margin-bottom:20px}.reference-home #homeCars{gap:18px}.reference-home .reference-car-card .vehicle{display:block}.reference-home .reference-car-card .vehicle-image{height:190px;min-height:0}.reference-home .reference-car-card .vehicle-info{padding:20px}.reference-home .reference-car-card .vehicle-info h3{font-size:15px;margin-bottom:16px}.reference-home .reference-car-card .vehicle-bottom{display:flex;justify-content:space-between;align-items:center}.reference-home .reference-car-card .vehicle-bottom>span{margin:0}}
+@media(min-width:701px) and (max-width:1100px){.reference-home-layout{grid-template-columns:minmax(0,1fr) 240px;gap:28px 22px}.reference-feature-row{grid-template-columns:minmax(0,1.5fr) 320px;height:400px;gap:22px}.reference-home .photo-feature-top{flex-direction:column;align-items:flex-start;padding:22px}.reference-home .photo-feature-copy{left:24px;right:22px;bottom:84px}.reference-home .photo-feature-copy h1{font-size:30px}.reference-home .discover-section .web-section-heading{flex-wrap:wrap;gap:6px 20px}.reference-discover-tabs{order:3;flex-basis:100%;align-self:auto}.reference-home #homeCars{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}}
+@media(max-width:700px){.reference-home-layout{gap:24px}.reference-feature-row{gap:20px}.reference-highlights{gap:20px}.reference-home .photo-feature{height:370px}#home .reference-profile-rail{padding:22px}.reference-home .discover-section .web-section-heading{margin-bottom:20px}.reference-home #homeCars{gap:18px}}
 
 /* Keep season and league side by side when the homepage narrows. */
 @media(max-width:1100px){
  .reference-home .reference-feature-row{grid-template-columns:minmax(0,1fr);height:auto}
  .reference-home .photo-feature{height:410px}
  .reference-home .reference-highlights{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto;gap:20px;align-items:stretch}
- .reference-home #home .dashboard-season .week-panel{min-height:220px}
- .reference-home #home .dashboard-league{justify-content:center}
- .reference-home #home .dashboard-league .section-heading{flex-wrap:wrap}
- .reference-home #home .dashboard-league h3{white-space:normal}
- .reference-home #home .dashboard-league .contact{white-space:normal;flex-wrap:wrap;gap:6px;overflow-wrap:anywhere}
 }
 @media(max-width:700px){
  .reference-home .reference-highlights{gap:12px}
- .reference-home #home .dashboard-season .week-panel{padding:14px 12px;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto auto auto;gap:12px;min-height:260px}
- .reference-home #home .dashboard-season .week-heading{grid-column:1;grid-row:1;flex-wrap:wrap;gap:6px;font-size:12px}
- .reference-home #home .dashboard-season .week-title{grid-column:1;grid-row:2;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
- .reference-home #home .dashboard-season .week-title h2{font-size:28px}
- .reference-home #home .dashboard-season .week-title>span{margin:0}
- .reference-home #home .dashboard-season .week-rewards{grid-column:1;grid-row:3;gap:5px}
- .reference-home #home .dashboard-season .week-rewards img{height:40px}
- .reference-home #home .dashboard-season .week-rewards button{font-size:9px;padding:5px 2px}
- .reference-home #home .dashboard-season .week-timer{grid-column:1;grid-row:4}
- .reference-home #home .dashboard-season .week-timer>span{display:none}
- .reference-home #home .dashboard-season .week-action{grid-column:1;grid-row:5;font-size:12px;gap:4px}
- .reference-home #home .dashboard-league{padding:14px 12px}
- .reference-home #home .dashboard-league .section-heading{gap:8px}
- .reference-home #home .dashboard-league h3{font-size:12px}
- .reference-home #home .dashboard-league .poster{margin:16px 0;height:60px;font-size:13px}
- .reference-home #home .dashboard-league .contact{padding:9px 7px;font-size:10px;line-height:1.7}
 }
 
 /* Compact recommendations follow available space, including split-window widths. */
 .reference-home #home #homeCars{grid-template-columns:repeat(auto-fit,minmax(min(170px,calc((100% - 12px)/2)),1fr));gap:12px}
-.reference-home #home .reference-car-card .vehicle{display:block;min-height:0;height:100%;width:100%}
-.reference-home #home .reference-car-card .vehicle-image{height:110px;min-height:0}
-.reference-home #home .reference-car-card .vehicle-image img{padding:16px 10px 8px}
-.reference-home #home .reference-car-card .vehicle-info{padding:14px 12px}
-.reference-home #home .reference-car-card .vehicle-info>p{font-size:9px;overflow-wrap:anywhere}
-.reference-home #home .reference-car-card .vehicle-info h3{font-size:13px;line-height:1.5;margin:7px 0 12px;min-height:39px;overflow-wrap:anywhere}
-.reference-home #home .reference-car-card .vehicle-bottom{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.reference-home #home .reference-car-card .vehicle-bottom>span{font-size:10px;margin:0}
-.reference-home #home .reference-car-card .tags{gap:4px;flex-wrap:wrap}
-.reference-home #home .reference-car-card .tags>span{font-size:9px;padding:3px 5px}
 @media(min-width:701px) and (max-width:1200px){
  .reference-home #home .reference-home-layout{grid-template-columns:minmax(0,1fr)}
  .reference-home #home .discover-section{grid-column:1;grid-row:2}
  .reference-home #home .reference-profile-rail{grid-column:1;grid-row:3}
-
- .reference-home #home .reference-car-card .vehicle-image{height:110px}
-}
-@media(max-width:700px){
-
- .reference-home #home .reference-car-card .vehicle-image{height:100px}
- .reference-home #home .reference-car-card .vehicle-info{padding:12px 10px}
- .reference-home #home .reference-car-card .vehicle-info>p{font-size:8px}
- .reference-home #home .reference-car-card .vehicle-info h3{font-size:12px;min-height:36px;margin-bottom:10px}
- .reference-home #home .reference-car-card .vehicle-bottom>span{font-size:9px}
 }
 
 /* Use identical columns for the feature row and the two lower sections. */
@@ -179,7 +99,6 @@
 .reference-home #home .reference-personal-section>.web-section-heading .text-link{font-size:11px;white-space:nowrap}
 .reference-home #home .reference-personal-section .reference-profile-rail{width:100%;margin:0;min-height:0;flex:1}
 .reference-home #home #homeCars{grid-template-columns:repeat(auto-fill,minmax(min(170px,calc((100% - 12px)/2)),1fr))}
-.reference-home #home .reference-car-card[hidden]{display:none}
 @media(max-width:1100px){
  .reference-home #home .reference-home-layout{grid-template-columns:minmax(0,1fr);gap:28px}
  .reference-home #home .reference-feature-row{grid-template-columns:minmax(0,1fr)}
@@ -189,4 +108,144 @@
  .reference-home #home .reference-personal-section>.web-section-heading h2,.reference-home #home .discover-section>.web-section-heading h2{font-size:23px}
  .reference-home #home .reference-personal-section>.web-section-heading{min-height:44px}
  .reference-home #home .reference-personal-section .reference-profile-rail{padding:20px}
+}
+
+/* Rounded homepage surfaces and shared garage previews. */
+.site-header .nav-link.active:after{border-radius:999px}
+.reference-home #home .vehicle{border-radius:16px}
+.reference-home #home .reference-discover-tabs button::after,.reference-home #home :is(.photo-dots button,.level-badges b,.tags span){border-radius:999px}
+.reference-home #home #homeCars{--home-garage-row-height:clamp(144px,16vw,218px)}
+.reference-home #home #homeCars.home-livery-shelf{
+ grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));
+ height:calc(var(--home-garage-row-height) * var(--home-garage-rows,2));align-items:stretch
+}
+.reference-home #home .home-livery-item .lc-toybox{height:100%;aspect-ratio:auto}
+.reference-home #home .home-livery-item{display:block;min-width:0;padding:0;border:0;background:none;text-align:left}
+.reference-home #home .home-livery-item:hover .lc-toybox{border-color:var(--selected-border)}
+@media(max-width:700px){
+ .reference-home #home #homeCars.home-livery-shelf{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .reference-home #home .home-livery-item{align-self:center;max-height:100%}
+ .reference-home #home .home-livery-item .lc-toybox{height:auto;aspect-ratio:1.17}
+ .reference-home #home .home-livery-item:nth-child(n+5){display:none}
+}
+
+.reference-home .site-header :is(button,input,.nav-panel),
+.reference-home #home :is(button,input,select){border-radius:5px}
+.reference-home #home :is(.photo-feature,.dashboard-card,.week-panel,.placeholder,.home-livery-item,.home-garage-tier){border-radius:7px}
+.reference-home #home :is(.vehicle-image,.lc-toybox){border-radius:5px;overflow:hidden}
+.reference-home #home .home-garage-tier{grid-column:1/-1;overflow:hidden;box-shadow:var(--home-showcase-shadow);border:1px solid var(--line)}
+.home-garage-tier .garage-row{min-height:0;height:var(--home-garage-row-height);padding:0 14px 5px;gap:7px}
+.home-garage-tier .garage-ceiling-lights{inset:0 14px auto;gap:7px;height:42px}
+.home-garage-tier .garage-ceiling-light::before{top:12px;width:min(38%,75px);height:4px}
+.home-garage-tier .garage-car-stage{height:clamp(54px,7vw,96px)}
+.reference-home #home .home-garage-tier .garage-car-title{height:36px;transform:translateY(12px)}
+.home-garage-tier .garage-car-meta{font-size:clamp(9px,1vw,14px);gap:4px;min-height:27px}
+.home-garage-tier .garage-car-meta>strong{margin-left:0;font-size:inherit}
+.home-garage-tier .garage-tier-count{top:16%;font-size:9px}
+.sliding-indicator{position:relative}
+.sliding-indicator .selection-pill{position:absolute;top:0;left:0;z-index:2;background:var(--pink);border-radius:999px;opacity:0;pointer-events:none;transition:transform .22s ease,width .22s ease,height .22s ease}
+#primaryNavigation .selection-pill{background:var(--nav-pill)}
+.sliding-indicator .selection-pill.is-visible{opacity:1}
+#primaryNavigation.sliding-indicator .nav-link.active::after{display:none}
+.reference-home #home .sliding-indicator button[aria-selected=true]{border-bottom-color:transparent}
+@media(prefers-reduced-motion:reduce){.sliding-indicator .selection-pill{transition:none}}
+
+.selection-pill-track{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.reference-home .site-header #primaryNavigation .nav-dropdown{border-radius:5px}
+
+/* Fixed grayscale lighting keeps the cars and overlay labels readable in both themes. */
+.reference-home #home #homeSeason{height:214px;align-self:start;border:1px solid var(--line);box-shadow:var(--home-showcase-shadow)}
+@media(min-width:1101px){
+ .reference-home #home .reference-highlights{grid-template-rows:214px minmax(0,1fr)}
+}
+.reference-home #home #homeSeason .home-season-spotlight{
+ position:relative;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) 32px;align-items:stretch;
+ height:100%;min-height:0;gap:0;padding:8px 0 0;overflow:hidden;border:0;border-radius:6px;
+ background:radial-gradient(ellipse 90% 70% at 51% -9%,#888 0%,#3f3f3f 53%,transparent 100%),linear-gradient(170deg,#252525,#101010 76%,#272727);
+ color:#fff;
+}
+.home-season-heading{padding-inline:14px;display:flex;align-items:baseline;justify-content:space-between;gap:12px;white-space:nowrap;text-shadow:0 2px 8px #0009}
+.home-season-heading h2{margin:0;font-size:48px;line-height:1;font-weight:900;font-style:italic;letter-spacing:-3px}
+.home-season-heading p{margin:0;color:#e5e5e5;font-size:11px;white-space:nowrap}
+.home-season-heading strong{color:var(--pink);font-size:16px}
+.home-season-cars{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:minmax(0,1fr);min-height:0;padding:0 10px 4px}
+.home-season-cars figure{position:relative;margin:0;min-width:0;min-height:0}
+.home-season-cars img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 7px 5px #000a)}
+.home-season-cars figcaption{
+ position:absolute;right:11%;bottom:10%;display:flex;align-items:flex-end;gap:2px;
+ color:#fff;line-height:1;text-shadow:0 2px 4px #000,0 0 8px #000;
+}
+.home-season-cars b{font-size:clamp(22px,2.3vw,34px);font-weight:950;font-style:italic}
+.home-season-cars small{font-size:11px;font-weight:800}
+.home-season-actions{display:flex;align-items:center;justify-content:space-between;padding:0 13px;background:#1d1d1de6;border-top:1px solid #ffffff26}
+.reference-home #home .home-season-link{
+ padding:2px 0;border:0;background:none;box-shadow:none;
+ color:#fff;font-size:13px;font-weight:850;font-style:italic;text-shadow:0 2px 5px #000
+}
+.reference-home #home .home-season-current{color:var(--accent)}
+.home-season-current::after{content:"";position:absolute;inset:0;cursor:pointer}
+.home-season-current:focus-visible::after{outline:2px solid var(--accent);outline-offset:-4px;border-radius:6px}
+.home-season-next{position:relative;z-index:1}
+.reference-home #home .home-season-link:hover{text-decoration:underline}
+@media(max-width:600px){
+ .home-season-heading{gap:6px;padding-inline:10px;justify-content:space-between;align-items:baseline;flex-wrap:wrap}
+ .home-season-heading h2{font-size:30px;letter-spacing:-1px}
+ .home-season-heading p{font-size:9px}
+ .home-season-heading strong{font-size:12px}
+ .home-season-cars{padding-inline:4px}
+ .home-season-cars figcaption{right:5%;bottom:20%}
+ .home-season-cars small{font-size:9px}
+ .home-season-actions{padding-inline:8px}
+ .reference-home #home .home-season-link{font-size:10px}
+}
+.home-season-heading h2{
+ color:var(--accent);
+ text-shadow:0 3px 2px #000c,0 8px 14px #000b,0 0 16px color-mix(in srgb,var(--accent) 28%,transparent);
+}
+.reference-home #home #homeLeague{position:relative;display:block;isolation:isolate;min-height:178px;padding:0;overflow:hidden;border:1px solid var(--line);box-shadow:var(--home-showcase-shadow)}
+.reference-home #home #homeLeague::after{
+ content:"";position:absolute;inset:auto 0 0 0;height:32px;z-index:2;pointer-events:none;
+ background:#1d1d1de6;border-top:1px solid #ffffff26;backdrop-filter:blur(6px)
+}
+.reference-home #home #homeLeague .poster{
+ position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;padding:0;
+ overflow:hidden;background:var(--field);border:0;border-radius:0;
+}
+.reference-home #home #homeLeague .poster img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 42%;transition:transform .3s ease}
+.reference-home #home #homeLeague:hover .poster img{transform:scale(1.03)}
+#homeLeague .poster::after{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(to bottom,#000d 0%,#0005 34%,transparent 62%,#000c 100%);
+}
+#homeLeague .poster:focus-visible{outline-offset:-4px;z-index:1}
+.reference-home #home #homeLeague .section-heading{position:static;display:block;margin:0}
+.reference-home #home #homeLeague .section-heading h3{
+ position:absolute;top:10px;left:14px;z-index:2;margin:0;pointer-events:none;
+ color:var(--accent);font-size:clamp(18px,2vw,28px);line-height:1.15;font-weight:950;font-style:italic;
+ text-shadow:0 3px 2px #000c,0 8px 16px #000b;
+}
+.reference-home #home #homeLeague :is(.section-heading button,#copyContact){
+ position:absolute;bottom:0;height:32px;z-index:3;width:auto;padding:0;border:0;background:none;box-shadow:none;
+ display:inline-flex;align-items:center;font-size:13px;font-weight:850;font-style:italic;text-shadow:0 2px 5px #000;
+}
+#homeLeague .section-heading button{left:13px;right:auto;top:auto;color:var(--accent)}
+#homeLeague #copyContact{right:13px;color:#fff}
+.reference-home #home #homeLeague :is(.section-heading button,#copyContact):hover{text-decoration:underline}
+@media(max-width:600px){
+ .reference-home #home #homeLeague .section-heading h3{top:8px;left:10px;font-size:18px}
+ #homeLeague .section-heading button{left:8px}
+ #homeLeague #copyContact{right:8px}
+ .reference-home #home #homeLeague :is(.section-heading button,#copyContact){font-size:10px}
+}
+
+/* Home display boxes can stretch vertically. Anchor each cutout to the floor. */
+#home .home-livery-item .lc-toybox>img{
+ top:auto;bottom:17%;left:5%;width:86%;height:52%;
+ object-position:center bottom;filter:drop-shadow(0 3px 2px var(--lb-shadow));
+}
+#home .home-livery-item :is(.lc-toy-underbody,.lc-toy-wheel-contact){display:none}
+.home-livery-car-name{
+ position:absolute;z-index:5;top:22%;left:9%;right:12%;text-align:center;
+ color:#fff;font-size:clamp(10px,1vw,14px);line-height:1.12;font-weight:950;font-style:italic;
+ overflow-wrap:anywhere;text-shadow:0 2px 4px #000e,0 0 8px #e8f8ff78,0 0 22px #b6ddf26b;
 }

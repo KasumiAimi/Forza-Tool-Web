@@ -9,6 +9,23 @@ const highlights=document.createElement('div');highlights.className='reference-h
 featureRow.append($('.photo-feature'),highlights);
 const homeSeasonPanel=$('#homeSeason'),homeLeaguePanel=$('#homeLeague');
 highlights.append(homeSeasonPanel,homeLeaguePanel);
+const leagueHeading=homeLeaguePanel.querySelector('.section-heading');
+leagueHeading.querySelector('h3').textContent='本周最新赛事';
+leagueHeading.querySelector('button').textContent='积分公示 ↗';
+const leagueSignup=homeLeaguePanel.querySelector('#copyContact');
+leagueSignup.textContent='报名参与 ↗';
+leagueSignup.setAttribute('aria-label','报名参与，复制 B 站联系人 KMTTB');
+leagueSignup.title='复制 B 站联系人 KMTTB';
+const leaguePoster=homeLeaguePanel.querySelector('.poster');
+const leaguePosterSource='assets/home/latest_event.webp';
+leaguePoster.innerHTML='<img src="'+leaguePosterSource+'" alt="KIT CUP S3-3 白川拉力赛海报">';
+leaguePoster.setAttribute('aria-label','查看白川拉力赛海报');
+leaguePoster.onclick=()=>{
+ const dialog=$('#photo');
+ dialog.querySelector('img').src=leaguePosterSource;
+ dialog.querySelector('p').textContent='KIT CUP S3-3 · 白川拉力赛';
+ dialog.showModal();
+};
 const discover=$('.discover-section');
 discover.querySelector('.web-section-heading').innerHTML='<h2>发现下一辆好车</h2><button data-route="carRecommendation" class="text-link">查看全部 ↗</button>';
 const homeTabs=document.createElement('div');homeTabs.className='reference-discover-tabs tabs';homeTabs.setAttribute('role','tablist');homeTabs.setAttribute('aria-label','精选推荐分类');
@@ -16,7 +33,7 @@ homeTabs.innerHTML=[['tunings','本周热门调校'],['liveries','热门涂装']
 discover.querySelector('.web-section-heading').append(homeTabs);
 $('#homeCars').setAttribute('role','tabpanel');
 const rail=document.createElement('aside');rail.className='reference-profile-rail dashboard-card';rail.setAttribute('aria-label','个人收藏更新');
-rail.innerHTML='<div class="dashboard-card-heading"><h3>个人收藏更新</h3></div><div id="referenceActivity"></div>';
+rail.innerHTML='<div class="dashboard-card-heading"><h3>个人收藏更新</h3><span id="activitySubSummary" class="activity-sub-summary"></span></div><div id="referenceActivity"></div>';
 const personalSection=document.createElement('section');personalSection.className='reference-personal-section';personalSection.setAttribute('aria-labelledby','personalSectionTitle');
 personalSection.innerHTML='<div class="web-section-heading"><h2 id="personalSectionTitle">个人中心</h2><button class="text-link favorite-link" data-route="collection" aria-label="个人收藏">全部收藏 ↗</button></div>';
 personalSection.append(rail);
@@ -32,21 +49,81 @@ let selectedHomeTab='tunings';
 function renderReferenceRecommendations(){
  homeTabs.querySelectorAll('[data-home-tab]').forEach(button=>{const active=button.dataset.homeTab===selectedHomeTab;button.setAttribute('aria-selected',String(active));button.classList.toggle('active',active);button.tabIndex=active?0:-1;});
  $('#homeCars').setAttribute('aria-labelledby','homeTab-'+selectedHomeTab);
- discover.querySelector('.text-link').dataset.route=selectedHomeTab==='liveries'?'liveryCenter':'carRecommendation';
- if(selectedHomeTab==='liveries'){$('#homeCars').innerHTML='<div class="reference-tab-empty placeholder"><span>✧</span><h3>为座驾，添一点自己的风格。</h3><p>涂装作品尚未接入，先看看涂装中心的布局。</p><button data-route="liveryCenter">进入涂装中心 ↗</button></div>';return;}
- const visible=cars.slice(0,8);
- $('#homeCars').innerHTML=visible.length?visible.map(car=>'<div class="reference-car-card">'+card(car,'',true)+'</div>').join(''):'<div class="reference-tab-empty placeholder"><h3>收藏更新会出现在这里</h3><p>收藏一台车辆，再回来查看它的调校。</p><button data-route="carSelection">浏览车辆库 ↗</button></div>';
- updateHomeRecommendationRows();requestAnimationFrame(updateHomeRecommendationRows);
+ const isLivery=selectedHomeTab==='liveries';
+ const link=discover.querySelector('.text-link');
+ link.dataset.route=isLivery?'liveryCenter':'carRecommendation';
+ link.textContent=isLivery?'进入涂装中心 ↗':'查看全部 ↗';
+ const grid=$('#homeCars');
+ grid.classList.toggle('home-livery-shelf',isLivery);
+ if(isLivery){
+  grid.innerHTML=liveryCenterWorks.slice(0,8).map((work,index)=>`<button type="button" class="home-livery-item" data-home-livery="${esc(work.image)}" aria-label="${esc(work.brand+' '+work.car+' · '+work.title+' · 查看车辆涂装')}">${renderLiveryToybox(work,index,true)}</button>`).join('');
+  return;
+ }
+ renderHomeGarage();
 }
-function updateHomeRecommendationRows(){
- const grid=$('#homeCars');if(!grid.getBoundingClientRect().width)return;
- const columns=getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
- const rows=matchMedia('(max-width:1100px)').matches?1:2;
- grid.querySelectorAll('.reference-car-card').forEach((item,index)=>{item.hidden=index>=columns*rows;});
+let homeGarageColumns=0;
+function renderHomeGarage(){
+ if(!homeReady)return;
+ const grid=$('#homeCars'),width=grid.clientWidth;
+ if(!width)return;
+ const columns=homeGarageColumnCount(width);
+ const tier='META';
+ const selectTunes=car=>car.tuningData.filter(tune=>tune.tier===tier);
+ const list=garageAllCars.filter(car=>selectTunes(car).length);
+ grid.style.setProperty('--home-garage-rows',Math.ceil(list.length/columns));
+ homeGarageColumns=columns;
+ if(selectedHomeTab!=='tunings')return;
+ const rows=[];
+ for(let start=0;start<list.length;start+=columns){
+  const count=start===0?`<span class="garage-tier-count">${String(list.length).padStart(2,'0')} 辆</span>`:'';
+  rows.push(renderGarageRow(list.slice(start,start+columns),tier,columns,count,selectTunes));
+ }
+ grid.innerHTML=`<section class="garage-tier home-garage-tier" data-tier="${tier}" aria-label="META 梯队">${rows.join('')}</section>`;
 }
-let recommendationWidth=-1;
-const recommendationResize=new ResizeObserver(entries=>{const width=entries[0].contentRect.width;if(Math.abs(width-recommendationWidth)>.5){recommendationWidth=width;updateHomeRecommendationRows();}});
-recommendationResize.observe($('#homeCars'));window.addEventListener('resize',updateHomeRecommendationRows);
+function homeGarageColumnCount(width){return width>=680?4:width>=510?3:width>=325?2:1;}
+let homeReady=false;
+new ResizeObserver(()=>{
+ const width=$('#homeCars').clientWidth;
+ const columns=homeGarageColumnCount(width);
+ if(width&&columns!==homeGarageColumns)renderHomeGarage();
+}).observe($('#homeCars'));
+document.addEventListener('DOMContentLoaded',()=>{
+ homeReady=true;
+ renderHomeGarage();
+ const groups=[['#primaryNavigation','.nav-link.active'],['.reference-discover-tabs','[aria-selected=true]'],['.activity-tabs','[aria-selected=true]']];
+ for(const [selector,activeSelector] of groups){
+  const group=$(selector);
+  if(!group)continue;
+  group.classList.add('sliding-indicator');
+  const bar=document.createElement('span');
+  bar.className='selection-pill';
+  bar.setAttribute('aria-hidden','true');
+  const track=document.createElement('span');
+  track.className='selection-pill-track';
+  track.append(bar);
+  group.append(track);
+  const update=()=>{
+   const active=group.querySelector(activeSelector);
+   const visible=!!active?.getClientRects().length;
+   if(!visible){bar.classList.remove('is-visible');return;}
+   const box=active.getBoundingClientRect(),base=group.getBoundingClientRect();
+
+   const vertical=group.closest('.site-header')?.classList.contains('is-collapsed');
+   const length=vertical?Math.min(48,box.width-24):Math.max(12,box.width-12);
+   bar.style.width=length+'px';
+   bar.style.height='3px';
+   const x=box.left-base.left+(vertical?12:(box.width-length)/2)+group.scrollLeft;
+   const y=(vertical?box.bottom-base.top-8:base.height-(group.id==='primaryNavigation'?4:3))+group.scrollTop;
+   bar.style.transform=`translate(${x}px,${y}px)`;
+   bar.classList.add('is-visible');
+  };
+  new MutationObserver(records=>{
+   if(records.some(record=>record.target!==bar))update();
+  }).observe(group,{subtree:true,attributes:true,attributeFilter:['class','aria-selected','hidden']});
+  new ResizeObserver(update).observe(group);
+  update();
+ }
+});
 function refreshReferenceHome(){
  $('#welcomeDriverName').textContent=nick;
 
@@ -54,10 +131,18 @@ function refreshReferenceHome(){
 }
 const refreshPreviousHome=refreshHomeSaved;
 refreshHomeSaved=function(){refreshPreviousHome();refreshReferenceHome();};
-const navigatePreviousHome=navigate;
-navigate=function(route,push=true){navigatePreviousHome(route,push);document.body.classList.toggle('reference-home',!route);};
+onAfterNavigate(route=>document.body.classList.toggle('reference-home',!route));
 const updatePreviousNick=updateNick;updateNick=function(){updatePreviousNick();$('#welcomeDriverName').textContent=nick;};
 document.addEventListener('click',event=>{
+ const livery=event.target.closest('[data-home-livery]');
+ if(livery){
+  const car=libraryPreviewCars.find(item=>garageImage(item)==='assets/official-cars/'+livery.dataset.homeLivery);
+  if(!car){notify('暂未找到对应车辆');return;}
+  detailCar=car;detailOrigin='homeLivery';detailTier='';showAll=false;
+  vehicleScreenCar='';
+  navigate('carDetail');
+  return;
+ }
  const tab=event.target.closest('[data-home-tab]');if(tab){selectedHomeTab=tab.dataset.homeTab;renderReferenceRecommendations();}
 
 });
