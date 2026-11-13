@@ -26,7 +26,7 @@
  document.addEventListener('click',event=>{
   // Let pointerup target the same control before removing entrance transforms.
   finishMotion();
-  const card=event.target.closest('[data-car]');
+  const card=event.target.closest('[data-car],[data-garage-car],[data-home-livery]');
   selectedImage=card?imageSnapshot(card.querySelector('img')):null;
  },true);
  reducedMotion.addEventListener('change',finishMotion);
@@ -43,16 +43,16 @@
   if(route!=='carDetail'&&previousRoute!=='carDetail')return;
   const page=route?$('#subpage'):$('#home');
   if(route!=='carDetail'){
-   play(page,[{opacity:0,transform:'translateY(-12px) scale(.99)'},{opacity:1,transform:'none'}],{duration:260});
+   play(page,[{opacity:0},{opacity:1}],{duration:260});
    return;
   }
   const target=page.querySelector('.masthead-car img');
   // Measure the resting layout before entrance transforms affect its bounds.
   const destination=target?.getBoundingClientRect(),targetPadding=target?getComputedStyle(target).padding:'';
   play(page.querySelector('.sub-header'),[{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'none'}],{duration:280});
-  play(page.querySelector('.vehicle-masthead'),[{opacity:0,transform:'scale(.985)'},{opacity:1,transform:'none'}],{duration:320});
+  play(page.querySelector('.vehicle-detail-screen, .vehicle-masthead'),[{opacity:0},{opacity:1}],{duration:320});
   play(page.querySelector('.vehicle-masthead-copy'),[{opacity:0,transform:'translateX(-22px)'},{opacity:1,transform:'none'}],{delay:70});
-  const panels=page.querySelectorAll('.spec-card,.detail-heading,.tune');
+  const panels=page.querySelectorAll('.spec-card,.vehicle-screen-toolbar,.detail-heading,.tune');
   panels.forEach((panel,index)=>play(panel,[{opacity:0,transform:'translateY(20px)'},{opacity:1,transform:'none'}],{delay:110+Math.min(index,4)*45,duration:300}));
   if(!target)return;
   if(!source){play(target,[{opacity:0,transform:'translateX(32px) scale(.94)'},{opacity:1,transform:'none'}],{duration:420});return;}

@@ -1,0 +1,100 @@
+/* The shallow curved vehicle display stands behind the car; works live on a separate metal panel. */
+#subpage.vehicle-screen-active{padding-top:0;padding-bottom:30px}
+.vehicle-screen-active>.sub-header{padding:10px 0 6px}
+.vehicle-screen-active>.sub-header h1{font-size:21px;margin:3px 0}
+.vehicle-screen-active>.sub-header p,.vehicle-screen-active>.sub-header .eyebrow{display:none}
+.vehicle-screen-active .web-breadcrumb{padding-top:14px}
+.vehicle-screen-active .vehicle-detail-actions{justify-content:space-between;margin:0 0 12px}
+.vehicle-screen-active .vehicle-detail-actions button{font-size:11px}
+.vehicle-detail-stage{position:relative;isolation:isolate;height:clamp(720px,calc(100svh - 220px),820px);background:transparent}
+.vehicle-stage-ground{position:absolute;z-index:-1;left:0;bottom:10px;width:39%;height:120px;background:radial-gradient(ellipse at 50% 60%,var(--workshop-ground),transparent 72%);pointer-events:none}
+.vehicle-detail-screen{position:absolute;z-index:1;top:22px;left:0;bottom:95px;width:35%;display:block;box-sizing:border-box;padding:104px 34px 0 48px;color:var(--detail-ink)}
+.vehicle-screen-shell{position:absolute;z-index:-1;inset:0;pointer-events:none;filter:drop-shadow(4px 6px 3px #0006) drop-shadow(0 0 13px var(--screen-bloom))}
+.vehicle-screen-shell svg{display:block;width:100%;height:100%;overflow:visible}
+.vehicle-screen-feet{position:absolute;left:5%;right:5%;bottom:-8px;height:13px;display:flex;justify-content:space-between;pointer-events:none}
+.vehicle-screen-feet i{display:block;width:68px;border-radius:2px;background:linear-gradient(#535b5d,#1c2224 40%,#111617);box-shadow:0 3px 4px #0009,inset 0 1px #87909066;transform:skewX(-16deg)}
+.vehicle-detail-screen .vehicle-masthead{position:relative;z-index:2;display:block;min-width:0;min-height:0;margin:0;border:0;border-radius:0;background:transparent;color:var(--detail-ink)}
+.vehicle-detail-screen .vehicle-masthead-copy{position:relative;z-index:2;padding:0;min-width:0}
+.vehicle-curve-word{display:inline-block;white-space:nowrap}
+.vehicle-curve-glyph{display:inline-block;transform:translateY(var(--curve-y)) rotate(var(--curve-angle));transform-origin:50% 80%}
+.vehicle-screen-brand-name{min-width:0}
+.vehicle-screen-brand{display:flex;align-items:center;gap:11px;color:var(--detail-ink);font:900 italic clamp(18px,1.8vw,29px)/1 Impact,'Arial Narrow','Microsoft YaHei',sans-serif;letter-spacing:.03em;text-transform:uppercase}
+.vehicle-screen-emblem{display:grid;place-items:center;flex:none;width:43px;height:43px;border:2px solid var(--detail-divider);border-radius:50%;font-size:18px;font-style:italic;background:var(--detail-mark-bg)}
+.vehicle-detail-screen .vehicle-masthead-copy>.eyebrow,.vehicle-detail-screen .masthead-meta,.vehicle-detail-screen .vehicle-masthead-copy>small{display:none}
+.vehicle-detail-screen .vehicle-masthead-copy h2{margin:15px 0 14px;font-size:clamp(23px,2.1vw,34px);font-weight:900;font-style:italic;line-height:1.08;letter-spacing:-.035em;color:var(--detail-ink);overflow-wrap:anywhere;text-shadow:0 1px 0 #fff6}
+.vehicle-detail-screen .save-button{position:static;display:inline-flex;margin:0;padding:6px 9px;border:1px solid var(--detail-divider);border-radius:3px;background:var(--detail-mark-bg);color:var(--detail-secondary);font-size:10px}
+.vehicle-detail-screen .save-button.saved{background:#fff;color:#a72541;border-color:#fff}
+.vehicle-detail-screen .spec-card{position:relative;margin:20px 0 0;padding:19px 0 0;border:0;border-radius:0;background:transparent;color:var(--detail-secondary)}
+.vehicle-detail-screen .spec-card h3,.vehicle-detail-screen .spec-card>p{display:none}
+.vehicle-detail-screen .spec-card::before{content:"";position:absolute;top:-3px;left:0;right:0;height:10px;border-bottom:1px solid var(--detail-divider);border-radius:0 0 50% 50%;pointer-events:none}
+.vehicle-detail-screen .spec-card dl{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px;margin:0}
+.vehicle-detail-screen .spec-card dl>div{display:block;padding:0;border:0;min-width:0;transform-origin:center top}
+.vehicle-detail-screen .spec-card dl>div:nth-child(odd){transform:perspective(600px) rotateY(4deg) rotate(1.2deg)}
+.vehicle-detail-screen .spec-card dl>div:nth-child(even){transform:perspective(600px) rotateY(-4deg) rotate(-1.2deg)}
+.vehicle-detail-screen .spec-card dt{margin:0 0 6px;font-size:12px;letter-spacing:.04em;color:var(--detail-muted)}
+.vehicle-detail-screen .spec-card dd{margin:0;font-size:18px;font-weight:800;line-height:1.4;color:var(--detail-secondary)}
+.vehicle-screen-performance{position:absolute;z-index:0;left:48px;right:28px;bottom:14px;height:33.333333%;display:grid;grid-template-columns:var(--grade-column-width,minmax(0,1fr)) max-content;justify-content:start;align-items:start;gap:8px;overflow:hidden;pointer-events:none;font-family:Impact,'Arial Narrow',sans-serif;font-style:italic;text-shadow:0 1px 0 #fff8}
+.vehicle-screen-grade-wrap{position:relative;height:100%;min-width:0}
+.vehicle-screen-grade-wrap .garage-class{position:absolute;left:0;top:0;display:block;width:max-content;max-width:none;transform:scaleX(var(--grade-scale-x,1));transform-origin:left top;opacity:.5}
+.vehicle-screen-performance .garage-class{font-family:'Segoe UI',Arial,sans-serif;font-size:300px;line-height:1;font-weight:600;text-shadow:inherit;color:var(--screen-grade-s1)}
+.vehicle-screen-performance>strong{align-self:center;color:var(--detail-ink);font-size:43px;line-height:1;font-weight:900;padding-top:0}
+.vehicle-screen-performance .garage-class-A{color:var(--screen-grade-a)}.vehicle-screen-performance .garage-class-B{color:var(--screen-grade-b)}.vehicle-screen-performance .garage-class-C{color:var(--screen-grade-c)}.vehicle-screen-performance .garage-class-D{color:var(--screen-grade-d)}.vehicle-screen-performance .garage-class-S2{color:var(--screen-grade-s2)}.vehicle-screen-performance .garage-class-R{color:var(--screen-grade-r)}.vehicle-screen-performance .garage-class-X{color:var(--screen-grade-x)}
+.vehicle-stage-car.masthead-car{position:absolute;z-index:5;left:-.5%;bottom:16px;width:38%;height:auto;display:block;overflow:visible;background:none;pointer-events:none;isolation:isolate}
+.vehicle-stage-car::after{content:"";position:absolute;z-index:0;inset:0;background:url('assets/tuning/vehicle-contact-shadow.svg') center/100% 100% no-repeat;transform:translateY(12%);pointer-events:none}
+.vehicle-stage-car.masthead-car>img{display:block;position:relative;z-index:2;width:100%;height:auto;max-width:none;padding:0;object-fit:contain;transform:translateY(12%);filter:drop-shadow(0 1px 1px #0005)}
+.vehicle-screen-right{position:absolute;left:40%;right:1%;top:78px;bottom:44px;display:flex;flex-direction:column;min-width:0;min-height:0;padding:30px;border:1px solid var(--workshop-frame);border-radius:8px;background:repeating-linear-gradient(0deg,#ffffff02 0 1px,transparent 1px 3px),linear-gradient(120deg,var(--workshop-metal-high),var(--workshop-metal) 35%,var(--workshop-metal-low) 80%,var(--workshop-metal-high));box-shadow:0 13px 26px var(--workshop-shadow),inset 0 1px var(--workshop-glint),inset 0 0 0 4px var(--workshop-edge),inset 0 0 0 5px var(--workshop-glint);color:var(--workshop-ink);--detail-ink:var(--workshop-ink);--detail-secondary:var(--workshop-secondary);--detail-muted:var(--workshop-muted);--detail-divider:var(--workshop-divider);--detail-mark-bg:var(--workshop-button-low)}
+.workshop-screws{position:absolute;inset:0;pointer-events:none;z-index:5}
+.workshop-screws i{position:absolute;width:9px;height:9px;border-radius:50%;background:linear-gradient(120deg,#7e8586,#343b3d 50%,#1b2224);box-shadow:0 1px 2px #000c,inset 0 1px 1px #c8caca75}
+.workshop-screws i:after{content:"";position:absolute;left:2px;right:2px;top:4px;height:1px;background:#13181a;transform:rotate(-35deg)}
+.workshop-screws i:nth-child(1){top:12px;left:12px}.workshop-screws i:nth-child(2){top:12px;right:12px}.workshop-screws i:nth-child(3){bottom:12px;left:12px}.workshop-screws i:nth-child(4){bottom:12px;right:12px}
+.vehicle-screen-toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex:none;padding-bottom:18px;border-bottom:1px solid var(--workshop-divider);box-shadow:0 1px var(--workshop-glint)}
+.vehicle-screen-tabs{display:flex;gap:8px;flex:none}
+.vehicle-screen-tabs button{display:flex;align-items:center;gap:15px;min-width:110px;justify-content:center;padding:11px 17px;border:1px solid var(--workshop-edge);border-radius:4px;background:linear-gradient(var(--workshop-button-high),var(--workshop-button-low));color:var(--workshop-secondary);font-size:14px;font-weight:850;box-shadow:0 3px 0 var(--workshop-edge),inset 0 1px var(--workshop-glint)}
+.vehicle-screen-tabs button span{font:800 11px/1 'Segoe UI',sans-serif;opacity:.85}
+.vehicle-screen-tabs button[aria-selected=true]{background:linear-gradient(var(--workshop-amber-high),var(--workshop-amber-low));color:var(--workshop-amber-ink);box-shadow:0 3px 0 var(--workshop-edge),inset 0 1px #ffe0a2}
+.vehicle-screen-tabs button:hover{filter:brightness(1.08)}
+.vehicle-screen-tabs button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--workshop-edge),inset 0 1px var(--workshop-glint)}
+.vehicle-screen-caption{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:10px;letter-spacing:1px;color:var(--workshop-muted)}
+.vehicle-screen-panel{min-height:0;flex:1;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--workshop-frame) transparent;padding:22px 2px 0 0}
+.vehicle-screen-panel[hidden]{display:none}
+.vehicle-screen-right .detail-heading{margin:0 0 18px;gap:10px}
+.vehicle-screen-right .detail-heading h2{color:var(--workshop-secondary);font-size:12px;font-weight:800}
+.vehicle-screen-right .detail-heading h2 small{font-size:11px;color:var(--workshop-muted);margin-left:9px}
+.vehicle-screen-right .detail-heading>button{background:linear-gradient(var(--workshop-button-high),var(--workshop-button-low));border:1px solid var(--workshop-edge);border-radius:3px;box-shadow:inset 0 1px var(--workshop-glint);color:var(--workshop-secondary);font-size:10px;padding:7px 10px}
+.vehicle-screen-right .tune{position:relative;margin:0 0 13px;padding:18px 20px;border:1px solid var(--workshop-edge);border-radius:4px;background:linear-gradient(115deg,var(--workshop-row-high),var(--workshop-row-low));box-shadow:0 4px 6px var(--workshop-shadow),inset 0 1px var(--workshop-glint),inset 0 -1px var(--workshop-edge);color:var(--workshop-ink)}
+.vehicle-screen-right .tune:before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;background:var(--workshop-accent)}
+.vehicle-screen-right .tune-top{align-items:center}
+.vehicle-screen-right .tune .tags{gap:6px}
+.vehicle-screen-right .tune .tags>b,.vehicle-screen-right .tune .tags>span{font-size:10px;padding:4px 7px}
+.vehicle-screen-right .like{color:var(--workshop-muted);flex:none;white-space:nowrap}
+.vehicle-screen-right .like.liked{color:var(--workshop-accent)}
+.vehicle-screen-right .tuner-row{margin:18px 0 13px;align-items:center;gap:10px;flex-wrap:wrap}
+.vehicle-screen-right .tuner-profile{color:var(--workshop-ink);gap:10px}
+.vehicle-screen-right .tuner-profile strong{font-size:15px;color:var(--workshop-ink)}
+.vehicle-screen-right .tuner-profile small{font-size:9px;color:var(--workshop-muted)}
+.vehicle-screen-right .tuner-more{display:none}
+.vehicle-screen-right .author-avatar{color:var(--workshop-accent);background:linear-gradient(var(--workshop-button-low),var(--workshop-edge));border:1px solid var(--workshop-edge);box-shadow:inset 0 1px 3px var(--workshop-shadow);width:33px;height:33px}
+.vehicle-screen-right .copy-tuner{font-size:11px;color:var(--workshop-ink);border:1px solid var(--workshop-edge);background:linear-gradient(var(--workshop-button-high),var(--workshop-button-low));padding:9px 12px;border-radius:3px;box-shadow:0 2px 0 var(--workshop-edge),inset 0 1px var(--workshop-glint)}
+.vehicle-screen-right .copy-tuner>span{margin-left:8px}
+.vehicle-screen-right .tune-desc{font-size:11px;line-height:1.8;color:var(--workshop-secondary);margin:0;padding:12px 0 0;border-top:1px solid var(--workshop-divider);box-shadow:inset 0 1px var(--workshop-glint)}
+.vehicle-screen-right .tune-desc>span{display:none}
+.vehicle-screen-right .placeholder{background:var(--workshop-row-low);border-color:var(--workshop-frame);color:var(--workshop-secondary);padding:24px 18px}
+.vehicle-livery-empty{display:flex;min-height:100%;align-items:center;justify-content:center;flex-direction:column;padding:24px;text-align:center;color:var(--workshop-muted)}
+.vehicle-livery-empty>span{display:grid;place-items:center;width:60px;height:60px;margin-bottom:16px;border:1px solid var(--workshop-frame);border-radius:8px;font-size:31px;color:var(--workshop-accent);background:linear-gradient(var(--workshop-row-high),var(--workshop-row-low));box-shadow:inset 0 1px var(--workshop-glint),0 3px 6px var(--workshop-shadow)}
+.vehicle-livery-empty h2{margin:0 0 9px;color:var(--workshop-ink);font-size:18px}
+.vehicle-livery-empty p{margin:0;font-size:12px;line-height:1.8}
+@media(max-width:1180px) and (min-width:851px){.vehicle-detail-screen{width:37%;padding:98px 25px 0 32px}.vehicle-screen-right{left:41%;right:0;padding:24px 21px}.vehicle-screen-brand{font-size:20px;gap:8px}.vehicle-screen-emblem{width:35px;height:35px;font-size:16px}.vehicle-detail-screen .vehicle-masthead-copy h2{font-size:27px}.vehicle-detail-screen .spec-card dl{gap:16px 12px}.vehicle-detail-screen .spec-card dd{font-size:16px}.vehicle-screen-performance{left:32px}.vehicle-screen-performance>strong{font-size:37px;padding-top:0}.vehicle-stage-car.masthead-car{width:40%}.vehicle-screen-caption{display:none}.vehicle-screen-right .tune{padding:16px}.vehicle-screen-right .copy-tuner{font-size:10px;padding:8px}}
+@media(max-width:850px){.vehicle-detail-stage{height:auto;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:660px auto;gap:28px;padding-bottom:20px}.vehicle-detail-screen{top:20px;bottom:auto;left:50%;width:min(100%,520px);height:540px;padding:90px 35px 0;transform:translateX(-50%)}.vehicle-detail-screen .vehicle-masthead-copy h2{font-size:29px}.vehicle-stage-car.masthead-car{top:644px;bottom:auto;left:50%;width:min(100%,550px);transform:translate(-50%,-100%)}.vehicle-stage-ground{top:550px;bottom:auto;left:0;width:100%;height:110px}.vehicle-screen-performance{left:35px;bottom:14px}.vehicle-screen-right{position:relative;grid-column:1;grid-row:2;top:auto;bottom:auto;left:auto;right:auto;width:100%;min-height:430px;box-sizing:border-box;padding:27px 25px}.vehicle-screen-panel{max-height:580px}.vehicle-screen-caption{display:block}}
+@media(max-width:520px){.vehicle-detail-screen{padding:85px 24px 0}.vehicle-screen-brand{font-size:21px;gap:8px}.vehicle-screen-emblem{width:36px;height:36px;font-size:16px}.vehicle-detail-screen .vehicle-masthead-copy h2{font-size:26px;margin-top:13px}.vehicle-detail-screen .spec-card dl{gap:17px 12px}.vehicle-detail-screen .spec-card dd{font-size:16px}.vehicle-screen-performance{left:24px;right:24px;bottom:14px}.vehicle-screen-performance>strong{font-size:36px;padding-top:0}.vehicle-screen-right{padding:24px 16px}.vehicle-screen-tabs{gap:7px}.vehicle-screen-tabs button{min-width:90px;padding:10px 13px;font-size:14px}.vehicle-screen-caption{display:none}.vehicle-screen-right .tune{padding:16px 14px}.vehicle-screen-right .detail-heading{flex-wrap:wrap}.vehicle-screen-right .tuner-profile strong{font-size:13px}.vehicle-screen-right .tuner-profile .author-avatar{width:28px;height:28px}.vehicle-screen-right .copy-tuner{font-size:10px;padding:8px}.vehicle-screen-right .copy-tuner>span{margin-left:5px}.vehicle-livery-empty{padding:24px 5px}.vehicle-livery-empty h2{font-size:17px}}
+
+
+
+/* Align visible uppercase and numeral edges, rather than differently sized line boxes. */
+@supports(text-box:trim-both cap alphabetic){
+ .vehicle-screen-performance .garage-class,.vehicle-screen-performance>strong{text-box:trim-both cap alphabetic}
+ .vehicle-screen-performance>strong{padding-top:0}
+}
+
+@media(min-width:851px) and (max-height:950px){.vehicle-detail-screen{padding-top:84px}}
+
+@media(max-width:380px){.vehicle-screen-performance{gap:8px}.vehicle-screen-performance>strong{font-size:32px}}

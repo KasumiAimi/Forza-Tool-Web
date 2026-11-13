@@ -1,0 +1,108 @@
+/* Alternative tuning view. The shared theme variables live in forza-theme.css. */
+body.garage-route-active .site-header .nav-link.active:after{background:var(--garage-accent)}
+body.garage-route-active button:focus-visible,body.garage-route-active input:focus-visible,body.garage-route-active select:focus-visible{outline-color:var(--garage-accent)}
+#subpage.garage-layout-active{max-width:1740px;padding-left:24px;padding-right:24px}
+#subpage.garage-layout-active .web-breadcrumb,#subpage.garage-layout-active>.sub-header{display:none}
+.garage-page{padding-top:28px}
+.garage-intro{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:22px}
+.garage-intro h1{font-size:clamp(28px,3.2vw,44px);line-height:1.1;margin:8px 0;font-weight:850;letter-spacing:-.03em}
+.garage-intro p{font-size:13px;line-height:1.6;color:var(--muted);margin:0}
+.garage-kicker{font-size:11px;color:var(--garage-accent);font-weight:750;letter-spacing:.06em}
+.garage-filter-hud{position:sticky;top:78px;z-index:25;border:1px solid var(--garage-hud-border);border-radius:8px;background:var(--garage-hud-bg);color:var(--garage-hud-ink);box-shadow:0 15px 40px #0005;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);padding:13px 16px;display:grid;gap:12px}
+.garage-hud-main,.garage-hud-filters{display:flex;align-items:end;gap:12px;min-width:0}
+.garage-hud-main{padding-bottom:10px;border-bottom:1px solid var(--garage-hud-border)}
+.garage-modes{display:flex;gap:4px;align-self:end;background:var(--garage-control-bg);padding:3px;border:1px solid var(--garage-control-border);border-radius:4px;white-space:nowrap}
+.garage-modes button{background:none;color:var(--garage-hud-muted);padding:8px 10px;border-radius:3px;font-size:12px}
+.garage-modes button.active{background:var(--garage-accent);color:#fff;font-weight:700}
+.garage-control{display:grid;gap:5px;min-width:0;flex:1}
+.garage-control>span{font-size:10px;color:var(--garage-hud-muted);font-weight:650;line-height:1.3}
+.garage-control input,.garage-control select,.garage-brand button{width:100%;height:36px;background:var(--garage-control-bg);border:1px solid var(--garage-control-border);border-radius:4px;color:var(--garage-hud-ink);padding:6px 10px;font-size:12px;outline:none;min-width:0}
+.garage-control input::placeholder{color:var(--garage-hud-muted)}
+.garage-control input:focus,.garage-control select:focus,.garage-brand button:focus-visible{border-color:var(--garage-accent);outline:2px solid var(--garage-accent);outline-offset:2px}
+.garage-control select{cursor:pointer}
+.garage-control option{background:var(--panel);color:var(--ink)}
+.garage-brand button{display:flex;justify-content:space-between;align-items:center;text-align:left}
+#subpage.garage-layout-active #openBrand{background:var(--garage-control-bg);color:var(--garage-hud-ink)}
+.garage-search{flex:1 1 320px;max-width:520px}
+.garage-count{margin-left:auto;align-self:center;color:var(--garage-hud-ink);font-size:12px;white-space:nowrap;font-weight:700}
+.garage-hud-filters>.garage-control{flex:1 1 160px}
+.garage-clear{height:36px;padding:0 12px;background:transparent;border:1px solid var(--garage-control-border);border-radius:4px;color:var(--garage-hud-ink);font-size:12px;white-space:nowrap}
+.garage-clear:hover{border-color:var(--garage-accent)}
+#subpage.garage-layout-active #garageClear{background:transparent;color:var(--garage-hud-ink)}
+.garage-view-controls{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:18px 0 14px;color:var(--muted);font-size:11px}
+.garage-view-controls p{margin:0}
+.garage-view-controls [role=group]{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.garage-view-controls [role=group]>span{margin-right:4px}
+.garage-view-controls button{background:var(--raised);color:var(--secondary);border:1px solid var(--line);padding:6px 9px;border-radius:3px;font-size:11px}
+.garage-view-controls button[aria-pressed=true]{border-color:var(--garage-accent);color:var(--ink);font-weight:700}
+.garage-results{overflow:hidden;background:#0a151c;border:1px solid var(--garage-hud-border);border-radius:7px}
+.garage-tier{position:relative;isolation:isolate;background:#08131c;--tier-color:#cf4f59;--wall-art:url('assets/tuning/garage-wall-meta.png')}
+.garage-tier:not(:first-child){border-top:1px solid #9ab6c235}
+.garage-tier[data-tier=T1]{--tier-color:#a073d1;--wall-art:url('assets/tuning/garage-wall-t1.png')}
+.garage-tier[data-tier=T2]{--tier-color:#5d9edf;--wall-art:url('assets/tuning/garage-wall-t2.png')}
+.garage-tier[data-tier=T3]{--tier-color:#68b77c;--wall-art:url('assets/tuning/garage-wall-t3.png')}
+.garage-tier[data-tier=Overpower]{--tier-color:#e4b957;--wall-art:url('assets/tuning/garage-wall-overpower.png')}
+.garage-tier[data-tier=玩具]{--tier-color:#eef2f0;--wall-art:url('assets/tuning/garage-wall-玩具.png')}
+.garage-tier[data-tier=常规]{--tier-color:#8ba8a8;--wall-art:url('assets/tuning/garage-wall-常规.png')}
+@media(max-width:1100px){
+ .garage-tier{--wall-art:url('assets/tuning/garage-wall-meta-mid.png')}
+ .garage-tier[data-tier=T1]{--wall-art:url('assets/tuning/garage-wall-t1-mid.png')}
+ .garage-tier[data-tier=T2]{--wall-art:url('assets/tuning/garage-wall-t2-mid.png')}
+ .garage-tier[data-tier=T3]{--wall-art:url('assets/tuning/garage-wall-t3-mid.png')}
+ .garage-tier[data-tier=Overpower]{--wall-art:url('assets/tuning/garage-wall-overpower-mid.png')}
+ .garage-tier[data-tier=玩具]{--wall-art:url('assets/tuning/garage-wall-玩具-mid.png')}
+ .garage-tier[data-tier=常规]{--wall-art:url('assets/tuning/garage-wall-常规-mid.png')}
+}
+@media(max-width:520px){
+ .garage-tier{--wall-art:url('assets/tuning/garage-wall-meta-mobile.png')}
+ .garage-tier[data-tier=T1]{--wall-art:url('assets/tuning/garage-wall-t1-mobile.png')}
+ .garage-tier[data-tier=T2]{--wall-art:url('assets/tuning/garage-wall-t2-mobile.png')}
+ .garage-tier[data-tier=T3]{--wall-art:url('assets/tuning/garage-wall-t3-mobile.png')}
+ .garage-tier[data-tier=Overpower]{--wall-art:url('assets/tuning/garage-wall-overpower-mobile.png')}
+ .garage-tier[data-tier=玩具]{--wall-art:url('assets/tuning/garage-wall-玩具-mobile.png')}
+ .garage-tier[data-tier=常规]{--wall-art:url('assets/tuning/garage-wall-常规-mobile.png')}
+}
+.garage-grid{position:relative;z-index:1}
+.garage-row{position:relative;isolation:isolate;display:grid;grid-template-columns:repeat(var(--row-columns),minmax(0,1fr));align-items:end;gap:18px;min-height:410px;padding:140px 18px 12px;background-image:var(--wall-art),linear-gradient(var(--garage-row-wash),var(--garage-row-wash)),url('assets/tuning/garage-level-v3.png');background-position:center;background-size:100% 100%;background-repeat:no-repeat}
+.garage-row+.garage-row{border-top:5px solid #050b10;box-shadow:inset 0 8px 12px #000a}
+.garage-ceiling-lights{position:absolute;z-index:1;inset:0 18px auto;display:grid;grid-template-columns:repeat(var(--row-columns),minmax(0,1fr));gap:18px;height:230px;pointer-events:none}
+.garage-ceiling-light{position:relative;min-width:0}
+.garage-ceiling-light::before{content:"";position:absolute;top:27px;left:50%;width:min(34%,110px);height:5px;transform:translateX(-50%);border-radius:2px;background:#f4f8f8;box-shadow:0 0 9px 3px #fff8,0 0 28px 8px #fff4}
+.garage-tier-count{position:absolute;z-index:2;top:99px;right:6%;padding:4px 8px;border:1px solid color-mix(in srgb,var(--tier-color) 45%,transparent);border-radius:3px;background:#0c1928b8;color:var(--tier-color);font-size:11px;font-weight:800;letter-spacing:.06em;line-height:1;backdrop-filter:blur(5px);pointer-events:none}
+.garage-row .garage-car{width:100%;z-index:2}
+.garage-car{display:flex;flex-direction:column;align-items:stretch;position:relative;min-width:0;padding:0;border:0;background:transparent;color:#fff;text-align:left;border-radius:4px;text-shadow:0 2px 4px #000,0 0 14px #000b}
+.garage-car:hover .garage-car-stage img,.garage-car:focus-visible .garage-car-stage img{transform:translateY(3px) scale(1.025)}
+.garage-car:focus-visible{outline:2px solid var(--garage-accent);outline-offset:4px}
+.garage-car-stage{position:relative;display:flex;align-items:end;justify-content:center;height:185px;width:100%;min-width:0;overflow:visible}
+.garage-car-stage::before{content:"";position:absolute;left:9%;right:3%;bottom:2px;height:25px;border-radius:50%;background:#000d;filter:blur(11px);z-index:-1}
+.garage-car-stage::after{content:"";position:absolute;right:1%;bottom:5px;width:49%;height:20px;border-radius:50%;background:#000e;filter:blur(6px);z-index:-1}
+.garage-car-stage img{display:block;flex:none;width:min(135%,365px);max-width:none;height:140%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 11px 9px #0009);transform:translateY(7px);transition:transform .18s ease}
+.garage-car-title{
+ position:relative;z-index:3;display:flex;align-self:center;align-items:center;justify-content:center;
+ width:100%;max-width:calc(100% - 12px);min-width:0;min-height:36px;padding:0 5px;gap:5px;
+ text-align:center;color:#fff;transform:translateY(42px);
+ text-shadow:0 2px 4px #000e,0 0 8px #e8f8ff78,0 0 22px #b6ddf26b;
+}
+.garage-car-title strong{
+ overflow:visible;white-space:normal;font-size:clamp(11px,1vw,14px);line-height:1.15;
+ font-weight:950;font-style:italic;letter-spacing:.01em;overflow-wrap:anywhere;
+}
+.garage-car-title strong{transition:transform .18s ease}
+.garage-car:is(:hover,:focus-visible) .garage-car-title strong{transform:scale(1.08)}
+.garage-page .garage-car-title strong{font-size:clamp(12.65px,1.15vw,16.1px)}
+.garage-car-title>span{font-size:10px;color:#d7e6ec;font-weight:900}
+.garage-car-meta{display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:40px;padding:0 3px;color:var(--garage-car-ink);font-size:clamp(14px,1.12vw,18px);font-style:italic;font-weight:900;line-height:1.15;white-space:nowrap}
+.garage-car-meta>span{overflow:hidden;text-overflow:ellipsis}
+.garage-car-meta>span:not(:last-of-type)::after{content:'·';margin-left:7px;color:#b9cbd1}
+.garage-car-meta>strong{margin-left:6px;color:var(--garage-car-ink);font-size:inherit;font-weight:950}
+.garage-class{color:#f2b8fa;font-size:1.3em;font-weight:950;text-shadow:0 1px 5px #000}
+.garage-class-A{color:#ff858c}.garage-class-B{color:#ffca78}.garage-class-C{color:#f6d96f}.garage-class-S2{color:#8db8ff}.garage-class-R{color:#e8a7eb}
+.garage-empty{min-height:280px;padding:65px 24px;text-align:center;color:#fff;background:linear-gradient(#08131ccb,#08131cdd),url('assets/tuning/garage-level-v3.png') center/cover}
+.garage-empty h2{font-size:20px}.garage-empty p{color:#d0dce0;font-size:13px}.garage-empty button{background:var(--garage-accent);color:#fff;padding:10px 16px;border-radius:3px}
+@media(max-width:1100px){.garage-hud-filters{flex-wrap:wrap}.garage-hud-filters>.garage-control{flex-basis:23%}.garage-grid .garage-car,.garage-grid[data-columns="5"] .garage-car{flex-basis:calc((100% - 36px)/3)}}
+@media(max-width:700px){#subpage.garage-layout-active{padding-left:14px;padding-right:14px}.garage-page{padding-top:18px}.garage-intro{align-items:start}.garage-intro h1{font-size:26px}.garage-intro p{font-size:11px}.garage-filter-hud{position:static;padding:12px}.garage-hud-main{flex-wrap:wrap}.garage-search{order:2;flex-basis:100%;max-width:none}.garage-count{margin-left:0}.garage-hud-filters>.garage-control{flex-basis:45%}.garage-clear{flex:1}.garage-car-stage{height:155px}.garage-car-title strong{font-size:11px}.garage-car-meta{font-size:12px;gap:4px}.garage-car-meta>strong{font-size:12px}.garage-ceiling-light::before{width:35%;height:4px}.garage-class{font-size:1.3em}}
+@media(max-width:520px){.garage-intro{flex-direction:column}.garage-hud-filters>.garage-control{flex-basis:44%}.garage-car-stage{height:185px}.garage-car-meta>span:last-child{display:inline}.garage-view-controls p{max-width:58%}}
+@media(max-width:1100px){.garage-row{gap:12px;padding-left:16px;padding-right:16px}.garage-ceiling-lights{left:16px;right:16px;gap:12px}}
+@media(max-width:700px){.garage-row{min-height:340px;padding:105px 14px 10px;gap:12px}.garage-tier-count{top:92px;right:5%;font-size:10px}.garage-car-title{transform:translateY(40px)}.garage-ceiling-lights{left:14px;right:14px;gap:12px;height:160px}.garage-ceiling-light::before{top:15px}}
+@media(max-width:520px){.garage-row{min-height:370px;padding-top:105px}}
+@media(prefers-reduced-motion:reduce){.garage-car-stage img,.garage-car-title strong{transition:none}}

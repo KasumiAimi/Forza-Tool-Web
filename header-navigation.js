@@ -40,12 +40,12 @@ document.addEventListener('keydown',event=>{
 });
 headerInner.addEventListener('focusout',event=>{if(navigationExpanded&&!headerInner.contains(event.relatedTarget))closeMainNavigation();});
 $('#globalSearch').addEventListener('focusin',()=>{if(navigationExpanded)closeMainNavigation();});
-const navigateWithHeader=navigate;
-navigate=function(route,push=true){closeMainNavigation();navigateWithHeader(route,push);if(!route)$('#logo').setAttribute('aria-current','page');else $('#logo').removeAttribute('aria-current');};
+onBeforeNavigate(()=>closeMainNavigation());
+onAfterNavigate(route=>{if(!route)$('#logo').setAttribute('aria-current','page');else $('#logo').removeAttribute('aria-current');});
 if(currentRoute)$('#logo').removeAttribute('aria-current');
 function syncHeaderRoute(){closeMainNavigation();if(currentRoute)$('#logo').removeAttribute('aria-current');else $('#logo').setAttribute('aria-current','page');}
 window.addEventListener('popstate',syncHeaderRoute);window.addEventListener('hashchange',syncHeaderRoute);
-window.addEventListener('resize',scheduleHeaderMeasure);
+window.addEventListener('resize',measureHeaderNavigation);
 const headerResizeObserver=new ResizeObserver(scheduleHeaderMeasure);
 headerResizeObserver.observe(headerInner);headerResizeObserver.observe($('.header-tools'));headerResizeObserver.observe($('#logo'));
 document.fonts.ready.then(scheduleHeaderMeasure);measureHeaderNavigation();

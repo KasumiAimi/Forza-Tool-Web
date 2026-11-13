@@ -23,6 +23,7 @@ const assert=require('node:assert/strict'),path=require('node:path');
   for(const width of [1440,1280,1024,768,390,320]){
    await page.setViewportSize({width,height:1000});await input.fill('Demo');
    const box=await panel.boundingBox();assert(box.x>=0&&box.x+box.width<=width,`search panel overflow ${width}`);
+   await page.waitForFunction(()=>document.documentElement.scrollWidth<=innerWidth);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`page overflow ${width}`);
    await input.press('Escape');
   }

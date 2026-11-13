@@ -16,6 +16,7 @@ const {openHeader,headerRoute}=require('./header-helpers.cjs');
    for(const box of boxes){assert(box&&box.x>=0&&box.x+box.width<=width,`${theme} top control clipped ${width}`);assert(Math.abs(box.y+box.height/2-boxes[0].y-boxes[0].height/2)<2,'search and controls must occupy the same top row');}
    assert.equal(await page.evaluate(()=>document.querySelector('.site-header').getBoundingClientRect().height<=73),true,'header must not wrap into a second line');
    await openHeader(page);
+   for(const selector of ['#primaryNavigation .nav-link','#communityMenu button strong']){const text=await page.locator(selector).first().evaluate(node=>({weight:getComputedStyle(node).fontWeight,style:getComputedStyle(node).fontStyle}));assert.equal(text.weight,'800');assert.equal(text.style,'italic');}
    if(collapsed){
     const first=await page.locator('#primaryNavigation .nav-toggle').first().boundingBox(),second=await page.locator('#primaryNavigation>[data-route]').first().boundingBox();
     assert(second.y>=first.y+first.height-1,'collapsed destinations must be vertical');
@@ -38,5 +39,28 @@ const {openHeader,headerRoute}=require('./header-helpers.cjs');
  await page.setViewportSize({width:699,height:900});await openHeader(page);await page.locator('#globalSearchInput').focus();assert.equal(await page.locator('#navigationToggle').getAttribute('aria-expanded'),'false','search focus closes navigation');
  await page.locator('#globalSearchInput').press('Escape');await openHeader(page);await page.locator('.site-footer>small').click();assert.equal(await page.locator('#navigationToggle').getAttribute('aria-expanded'),'false','outside click closes navigation');
  await page.setViewportSize({width:1440,height:900});await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));assert.equal(await page.locator('#primaryNavigation').isVisible(),true,'expanding window restores full navigation');
+
+ // The active capsule and temporary hover underline also apply to a vertical menu.
+ for(const width of [1440,390]){
+  await page.setViewportSize({width,height:900});
+  await headerRoute(page,'leagueStandings');
+  await openHeader(page);
+  const active=page.locator('#primaryNavigation>[data-route="leagueStandings"]');
+  const inactive=page.locator('#primaryNavigation>[data-route="carSelection"]');
+  const capsule=page.locator('#primaryNavigation .selection-pill');
+  await inactive.hover();
+  await page.waitForFunction(()=>getComputedStyle(document.querySelector('#primaryNavigation>[data-route="carSelection"]'),'::after').opacity==='1');
+  const underline=await inactive.evaluate(node=>{const s=getComputedStyle(node,'::after');return {height:parseFloat(s.height),radius:parseFloat(s.borderTopLeftRadius),transition:s.transitionDuration};});
+  assert.equal(underline.height,3);
+  assert(underline.radius>=underline.height/2,'hover underline must have capsule ends');
+  assert.notEqual(underline.transition,'0s','hover underline fades and expands');
+  await page.locator('#logo').hover();
+  await page.waitForFunction(()=>getComputedStyle(document.querySelector('#primaryNavigation>[data-route="carSelection"]'),'::after').opacity==='0');
+  assert.equal(await capsule.evaluate(node=>getComputedStyle(node).opacity),'1','active indicator remains while other options are hovered');
+  const pill=await capsule.boundingBox(),button=await active.boundingBox();
+  assert(pill.width>pill.height&&pill.height===3,'vertical navigation also uses a horizontal underline');
+  assert(pill.y>button.y+button.height/2,'capsule sits underneath the label');
+  assert.equal(await capsule.evaluate(node=>parseFloat(getComputedStyle(node).borderTopLeftRadius)>=1.5),true);
+ }
  assert.deepEqual(errors,[]);console.log('Header passed: merged home entry, community dropdown, fit-based collapse, single-row search, vertical menu, resize, keyboard, dismissal, destinations and both responsive themes.');
 }finally{await browser.close();}})().catch(error=>{console.error(error);process.exitCode=1});

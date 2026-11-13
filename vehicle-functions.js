@@ -1,6 +1,6 @@
 // Functional vehicle workflow. Data remains explicitly marked as demo content.
-let vehicleQuery='',vehicleSort='default',vehicleCountry='',savedOnly=false,advancedOpen=false;
-collected=new Set([...collected].filter(id=>cars.some(car=>car._id===id)));
+let vehicleQuery='',vehicleSort='default',vehicleCountry='',savedOnly=false,advancedOpen=false,selectedLiveryWorkId='',blueprintWorkId='',guideArticleId='';
+collected=new Set([...collected].filter(id=>libraryPreviewCars.some(car=>car._id===id)));
 const vehicleNameOrder=(a,b)=>(a.brand+' '+a.name).localeCompare(b.brand+' '+b.name,'zh-CN');
 function matchesVehicleText(car,query){
  const text=[car.brand,car.name,car.country,...car.tuningData.map(t=>t.tuner)].join(' ').toLocaleLowerCase();
@@ -38,7 +38,7 @@ function resetVehicleFilters(){
 function bindReset(){if($('#resetVehicleFilters'))$('#resetVehicleFilters').onclick=resetVehicleFilters;}
 
 renderLibrary=function(){
- const source=currentRoute==='collection'?cars.filter(c=>collected.has(c._id)):cars;
+ const source=currentRoute==='collection'?libraryPreviewCars.filter(c=>collected.has(c._id)):libraryPreviewCars;
  const list=sortVehicles(source.filter(c=>(!filters.brand||c.brand===filters.brand)&&(!filters.level||c.level===filters.level)&&(!filters.driveType||c.driveType===filters.driveType)&&(!vehicleCountry||c.country===vehicleCountry)&&(!savedOnly||collected.has(c._id))&&matchesVehicleText(c,libraryQuery)));
  const hasFilters=libraryQuery||Object.values(filters).some(Boolean)||vehicleCountry||savedOnly;
  $('#subcontent').innerHTML=`${currentRoute==='collection'?`<p class="vehicle-note">已收藏 ${source.length} 辆车辆，保存在当前浏览器。</p>`:''}
@@ -46,10 +46,10 @@ renderLibrary=function(){
   <div class="library-controls"><button class="brand-trigger" id="openBrand">${esc(filters.brand||'全部车厂')} ▾</button><button class="copy-tuner" id="advanced" aria-expanded="${advancedOpen}" aria-controls="advancedVehicleFilters">高级筛选</button>${hasFilters&&list.length?'<button class="copy-tuner" id="resetVehicleFilters">清空搜索与筛选</button>':''}</div>
   <div class="library-pills"><div class="vehicle-note">车辆等级</div>${pill('level',['',...levels]).replace('></button>','>全部等级</button>')}<div class="vehicle-note">驱动形式</div>${pill('driveType',['','四驱','后驱','前驱']).replace('></button>','>全部驱动</button>')}</div>
   <section class="vehicle-advanced" id="advancedVehicleFilters" ${advancedOpen?'':'hidden'} aria-label="高级筛选">
-   <label>国家 / 地区<select id="vehicleCountry"><option value="">全部地区</option>${[...new Set(cars.map(c=>c.country))].sort().map(country=>`<option ${vehicleCountry===country?'selected':''}>${esc(country)}</option>`).join('')}</select></label>
+   <label>国家 / 地区<select id="vehicleCountry"><option value="">全部地区</option>${[...new Set(source.map(c=>c.country))].sort().map(country=>`<option ${vehicleCountry===country?'selected':''}>${esc(country)}</option>`).join('')}</select></label>
    ${currentRoute==='collection'?'':'<label class="vehicle-checkbox"><input id="savedOnly" type="checkbox" '+(savedOnly?'checked':'')+'>仅看已收藏</label>'}
   </section>
-  ${source.length?list.length?`<div class="car-grid library-grid">${list.map(c=>currentRoute==='collection'?`<article class="saved-vehicle">${card(c,'',true)}<button class="copy-tuner remove-saved" data-remove-saved="${c._id}" aria-label="取消收藏 ${esc(c.name)}">取消收藏</button></article>`:card(c,'',true)).join('')}</div>`:vehicleEmpty('没有找到符合条件的车辆'):
+  ${source.length?list.length?currentRoute==='carSelection'?renderBrandGarage(list):`<div class="car-grid library-grid">${list.map(c=>currentRoute==='collection'?`<article class="saved-vehicle">${card(c,'',true)}<button class="copy-tuner remove-saved" data-remove-saved="${c._id}" aria-label="取消收藏 ${esc(c.name)}">取消收藏</button></article>`:card(c,'',true)).join('')}</div>`:vehicleEmpty('没有找到符合条件的车辆'):
    '<div class="placeholder"><h2>暂无收藏车辆</h2><p>进入车辆详情，点击收藏车辆，随后可在这里搜索和管理。</p><button class="copy-tuner" data-route="carSelection">浏览车辆库</button></div>'}`;
  $('#openBrand').onclick=openBrand;
  $('#advanced').onclick=()=>{advancedOpen=!advancedOpen;$('#advancedVehicleFilters').hidden=!advancedOpen;$('#advanced').setAttribute('aria-expanded',String(advancedOpen));syncVehicleHistory();};
@@ -58,24 +58,12 @@ renderLibrary=function(){
  bindVehicleTools('carSearch',value=>libraryQuery=value,renderLibrary);bindReset();
 };
 renderBrands=function(query){
- const source=currentRoute==='carRecommendation'?cars.filter(c=>c.tuningData.some(t=>mode==='online'?t.online:['漂移','直线加速'].includes(t.scenario))):cars;
+ const source=currentRoute==='carRecommendation'?garageAllCars.filter(c=>c.tuningData.some(t=>mode==='online'?t.online:['漂移','直线加速'].includes(t.scenario))):libraryPreviewCars;
  const brands=[...new Set(source.map(c=>c.brand))].sort().filter(brand=>brand.toLowerCase().includes(query.trim().toLowerCase()));
- $('#brandList').innerHTML=`<button data-brand="">全部车厂 ${!filters.brand?'✓':''}</button>`+brands.map(brand=>`<button data-brand="${esc(brand)}">${esc(brand)} ${filters.brand===brand?'✓':'›'}</button>`).join('')+(brands.length?'':'<p role="status">没有匹配的车厂</p>');
+ $('#brandList').innerHTML=`<button data-brand="" class="brand-choice ${!filters.brand?'is-selected':''}" aria-pressed="${!filters.brand}"><span class="brand-logo-placeholder" aria-hidden="true">全部</span><span>全部车厂</span></button>`+brands.map(brand=>`<button data-brand="${esc(brand)}" class="brand-choice ${filters.brand===brand?'is-selected':''}" aria-pressed="${filters.brand===brand}"><span class="brand-logo-placeholder" aria-hidden="true">${esc(libraryBrandMark(brand))}</span><span>${esc(brand)}</span></button>`).join('')+(brands.length?'':'<p role="status">没有匹配的车厂</p>');
 };
 
-const renderBasicTuning=renderTuning;
-renderTuning=function(){
- renderBasicTuning();
- const matching=cars.filter(c=>(!filters.brand||c.brand===filters.brand)&&c.tuningData.some(tuneMatches)&&matchesVehicleText(c,vehicleQuery));
- const container=$('.recommendation-list');
- container.innerHTML=tiers.map(tier=>{
-  const list=sortVehicles(matching.filter(c=>c.tuningData.some(t=>tuneMatches(t)&&t.tier===tier)));
-  return list.length?`<section class="tier-section"><div class="tier-heading tier-${tier}"><h2>${tier==='常规'?'常规调校':tier+' 梯队'}</h2><span>${list.length} 辆</span></div><div class="car-grid">${list.map(c=>card(c,tier)).join('')}</div></section>`:'';
- }).join('')||vehicleEmpty('没有找到匹配的调校');
- $('.web-modebar>span').textContent=matching.length+' 辆匹配车辆 · 演示数据';
- $('.web-modebar').insertAdjacentHTML('afterend',vehicleToolbar(vehicleQuery,'tuningSearch',matching.length));
- bindVehicleTools('tuningSearch',value=>vehicleQuery=value,renderTuning);bindReset();
-};
+renderTuning=renderGarageTuning;
 // Tuning cards show only the tune tags for the selected mode, filters and tier.
 const renderVehicleCard=card;
 card=function(car,tier='',library=false){
@@ -86,27 +74,33 @@ card=function(car,tier='',library=false){
 const renderBasicDetail=renderDetail;
 renderDetail=function(){
  renderBasicDetail();if(!detailCar)return;
+ if((detailCar.officialImage||garageOfficialImages[detailCar._id])){const image=$('.masthead-car img');if(image){image.src=garageImage(detailCar);image.alt=detailCar.brand+' '+detailCar.name+' 官方车图';}}
  $('#subcontent').insertAdjacentHTML('afterbegin','<div class="vehicle-detail-actions"><button class="copy-tuner" id="backToVehicles">返回车辆列表</button><button class="copy-tuner" id="shareVehicle">复制详情链接</button></div>');
- $('#backToVehicles').onclick=()=>navigate(['carSelection','collection','carRecommendation'].includes(detailOrigin)?detailOrigin:'carSelection');
+ if(detailOrigin==='homeLivery')$('#backToVehicles').textContent='返回首页';
+ if(['liveryCenter','liveryCollection','liveryProfile'].includes(detailOrigin))$('#backToVehicles').textContent=detailOrigin==='liveryCenter'?'返回涂装中心':detailOrigin==='liveryProfile'?'返回创作者主页':'返回个人收藏';
+ if(detailOrigin==='tunerProfile')$('#backToVehicles').textContent='返回创作者主页';
+ if(['seasonalEvents','seasonPreview'].includes(detailOrigin))$('#backToVehicles').textContent='返回季节赛攻略';
+ $('#backToVehicles').onclick=()=>navigate(detailOrigin==='homeLivery'?'':detailOrigin==='liveryCenter'?'liveryCenter':detailOrigin==='liveryCollection'?'collection':detailOrigin==='liveryProfile'?'tunerProfile':['carSelection','collection','carRecommendation','tunerProfile','seasonalEvents','seasonPreview'].includes(detailOrigin)?detailOrigin:'carSelection');
  $('#shareVehicle').onclick=()=>copy(location.href);
  if($('#showAll')){const toggle=$('#showAll').onclick;$('#showAll').onclick=()=>{toggle();syncVehicleHistory();};}
 };
 const renderVehiclePage=render;
-render=function(){if(currentRoute==='collection')renderLibrary();else renderVehiclePage();syncVehicleHistory();};
+render=function(){if(currentRoute==='collection'&&typeof renderCollection==='function')renderCollection();else if(currentRoute==='collection')renderLibrary();else renderVehiclePage();const garageActive=currentRoute==='carRecommendation';$('#subpage').classList.toggle('garage-layout-active',garageActive);$('#subpage').classList.toggle('library-garage-active',currentRoute==='carSelection');document.body.classList.toggle('garage-route-active',garageActive);syncVehicleHistory();};
 document.addEventListener('click',event=>{
  const remove=event.target.closest('[data-remove-saved]');
- if(remove){collected.delete(remove.dataset.removeSaved);saveCollect();renderLibrary();refreshHomeSaved();notify('已取消收藏');}
+ if(remove){collected.delete(remove.dataset.removeSaved);saveCollect();render();refreshHomeSaved();notify('已取消收藏');}
  syncVehicleHistory();
 });
 
 // Shareable hashes and history snapshots retain filters and detail context.
 function vehicleState(){
- return {route:currentRoute,mode,filters:{...filters},query:vehicleQuery,libraryQuery,sort:vehicleSort,country:vehicleCountry,savedOnly,advancedOpen,car:detailCar?detailCar._id:'',origin:detailOrigin,tier:detailTier,showAll,tuner:render.tuner||''};
+ return {route:currentRoute,mode,filters:{...filters},query:vehicleQuery,libraryQuery,sort:vehicleSort,country:vehicleCountry,savedOnly,advancedOpen,car:detailCar?detailCar._id:'',livery:['liveryCenter','liveryCollection','liveryProfile'].includes(detailOrigin)?selectedLiveryWorkId:'',blueprintWork:blueprintWorkId,guideArticle:guideArticleId,origin:detailOrigin,tier:detailTier,showAll,tuner:render.tuner||'',view:'garage',columns:garageColumns};
 }
 function vehicleHash(state){
  if(!state.route)return location.pathname+location.search;
  const p=new URLSearchParams();
  if(['carRecommendation','carDetail'].includes(state.route)&&state.mode!=='online')p.set('mode',state.mode);
+ if(['carRecommendation','carDetail','carSelection'].includes(state.route)&&state.view==='garage'){p.set('view','garage');if(state.columns===5&&(state.route==='carRecommendation'||state.route==='carDetail'&&state.origin==='carRecommendation'))p.set('cols','5');}
  if(['carSelection','collection','carRecommendation','carDetail'].includes(state.route)){
   for(const [key,value] of Object.entries(state.filters))if(value)p.set(key,value);
   if(state.sort!=='default')p.set('sort',state.sort);
@@ -117,10 +111,12 @@ function vehicleHash(state){
   if(state.savedOnly)p.set('saved','1');
  }
  if(state.route==='carDetail'){
-  p.set('id',state.car);p.set('from',state.origin||'carSelection');
+  p.set('id',state.car);p.set('from',state.origin||'carSelection');if(state.livery)p.set('livery',state.livery);
   if(state.tier)p.set('tier',state.tier);if(state.showAll)p.set('all','1');
  }
- if(state.route==='tunerProfile'&&state.tuner)p.set('name',state.tuner);
+ if((state.route==='tunerProfile'||state.route==='carDetail'&&['tunerProfile','liveryProfile'].includes(state.origin))&&state.tuner)p.set('name',state.tuner);
+ if(state.route==='blueprintRecommendation'&&state.blueprintWork)p.set('work',state.blueprintWork);
+ if(state.route==='gameGuide'&&state.guideArticle)p.set('article',state.guideArticle);
  return '#'+state.route+(p.size?'?'+p.toString():'');
 }
 function syncVehicleHistory(){
@@ -128,35 +124,41 @@ function syncVehicleHistory(){
  const state=vehicleState();history.replaceState(state,'',vehicleHash(state));
 }
 let vehicleHistoryReady=false;
-const navigateVehiclePage=navigate;
-navigate=function(route,push=true){
- if(route==='carSelection'&&currentRoute!== 'carDetail'){vehicleCountry='';savedOnly=false;}
- if(route==='collection'&&currentRoute!=='carDetail'){filters={brand:'',level:'',scenario:'',driveType:''};libraryQuery='';vehicleCountry='';savedOnly=false;}
- navigateVehiclePage(route,push);syncVehicleHistory();
-};
+onBeforeNavigate(route=>{
+ if(route==='carDetail'&&!['liveryCenter','liveryCollection','liveryProfile'].includes(detailOrigin))selectedLiveryWorkId='';
+ if(vehicleHistoryReady&&route==='carSelection'&&currentRoute!=='carDetail'){vehicleCountry='';savedOnly=false;}
+ if(vehicleHistoryReady&&route==='collection'&&currentRoute!=='carDetail'){filters={brand:'',level:'',scenario:'',driveType:''};libraryQuery='';vehicleCountry='';savedOnly=false;}
+});
+onAfterNavigate(route=>{
+ if(!route){document.body.classList.remove('garage-route-active');$('#subpage').classList.remove('garage-layout-active');}syncVehicleHistory();
+});
 function stateFromHash(){
  const [route,query='']=location.hash.slice(1).split('?'),p=new URLSearchParams(query);
- return {route:route||'',mode:p.get('mode'),filters:Object.fromEntries(['brand','level','scenario','driveType'].map(key=>[key,p.get(key)||''])),query:route==='carRecommendation'?p.get('q')||'':p.get('tuningQ')||'',libraryQuery:route==='carRecommendation'?'':p.get('q')||'',sort:p.get('sort'),country:p.get('country'),savedOnly:p.get('saved')==='1',car:p.get('id'),origin:p.get('from'),tier:p.get('tier'),showAll:p.get('all')==='1',tuner:p.get('name')};
+ return {route:route||'',mode:p.get('mode'),filters:Object.fromEntries(['brand','level','scenario','driveType'].map(key=>[key,p.get(key)||''])),query:route==='carRecommendation'?p.get('q')||'':p.get('tuningQ')||'',libraryQuery:route==='carRecommendation'?'':p.get('q')||'',sort:p.get('sort'),country:p.get('country'),savedOnly:p.get('saved')==='1',car:p.get('id'),livery:p.get('livery'),blueprintWork:p.get('work'),guideArticle:p.get('article'),origin:p.get('from'),tier:p.get('tier'),showAll:p.get('all')==='1',tuner:p.get('name'),view:p.get('view'),columns:p.get('cols')};
 }
 function restoreVehicleState(state){
  vehicleHistoryReady=false;
  const route=state.route===''||Object.hasOwn(routeDescriptions,state.route)?state.route:'';
+ if(state.columns!==null&&state.columns!==undefined&&state.columns!=='')garageColumns=Number(state.columns)===5?5:4;
+ else if(route==='carRecommendation')garageColumns=4;
  mode=state.mode==='all'?'all':'online';
  const f=state.filters||{};
- filters={brand:cars.some(c=>c.brand===f.brand)?f.brand:'',level:levels.includes(f.level)?f.level:'',scenario:modeOptions().scenarios.includes(f.scenario)?f.scenario:'',driveType:modeOptions().drives.includes(f.driveType)?f.driveType:''};
+ filters={brand:(route==='carRecommendation'?garageAllCars:libraryPreviewCars).some(c=>c.brand===f.brand)?f.brand:'',level:levels.includes(f.level)?f.level:'',scenario:modeOptions().scenarios.includes(f.scenario)?f.scenario:'',driveType:modeOptions().drives.includes(f.driveType)?f.driveType:''};
  if(!scenarios().includes(filters.scenario))filters.scenario='';
  vehicleQuery=String(state.query||'').slice(0,100);libraryQuery=String(state.libraryQuery||'').slice(0,100);
  vehicleSort=['name','level','tunes'].includes(state.sort)?state.sort:'default';
- vehicleCountry=cars.some(c=>c.country===state.country)?state.country:'';savedOnly=state.savedOnly===true;advancedOpen=state.advancedOpen===true||!!vehicleCountry||savedOnly;
- detailCar=cars.find(c=>c._id===state.car)||null;
- detailOrigin=['carRecommendation','carSelection','collection','globalSearch'].includes(state.origin)?state.origin:'carSelection';
+ vehicleCountry=libraryPreviewCars.some(c=>c.country===state.country)?state.country:'';savedOnly=state.savedOnly===true;advancedOpen=state.advancedOpen===true||!!vehicleCountry||savedOnly;
+ detailCar=libraryPreviewCars.find(c=>c._id===state.car)||null;
+ detailOrigin=['carRecommendation','carSelection','collection','globalSearch','homeLivery','liveryCenter','liveryCollection','liveryProfile','tunerProfile','seasonalEvents','seasonPreview'].includes(state.origin)?state.origin:'carSelection';
+ selectedLiveryWorkId=String(state.livery||'');blueprintWorkId=String(state.blueprintWork||'');guideArticleId=String(state.guideArticle||'');
  detailTier=tiers.includes(state.tier)?state.tier:'';showAll=state.showAll===true;
  render.tuner=typeof state.tuner==='string'?state.tuner:'';
  const missing=route==='carDetail'&&!detailCar;
- navigateVehiclePage(missing?'carSelection':route,false);
+ navigate(missing?'carSelection':route,false);
  vehicleHistoryReady=true;syncVehicleHistory();
  if(missing)notify('找不到这台车辆，已返回车辆库');
 }
 window.onpopstate=event=>restoreVehicleState(event.state&&Object.hasOwn(event.state,'filters')?event.state:stateFromHash());
 window.addEventListener('hashchange',()=>{if((currentRoute?vehicleHash(vehicleState()):'')!==location.hash)restoreVehicleState(stateFromHash());});
+restoreVehicleState(stateFromHash());
 restoreVehicleState(stateFromHash());

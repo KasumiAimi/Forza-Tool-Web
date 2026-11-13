@@ -49,3 +49,62 @@
  .site-header .global-search-panel{position:fixed;top:72px;left:10px;right:10px;width:auto;max-width:none}
  .site-header #globalSearchResults{max-height:50svh}
 }
+
+/* Keep both parts of the wordmark within the navigation row. */
+.site-header #logo{display:flex;align-items:center;gap:9px;padding:5px 0;color:var(--ink)}
+.site-brand-wing{display:block;flex:none;width:45px;height:auto;overflow:hidden;filter:invert(1)}
+[data-theme=light] .site-brand-wing{filter:none}
+.site-header #logo .site-brand-wordmark{
+ display:grid;gap:3px;padding-left:9px;position:relative;text-align:left;letter-spacing:0;line-height:1;
+}
+.site-brand-wordmark::before{
+ content:"";position:absolute;left:0;top:2px;bottom:2px;width:1px;
+ background:var(--border-strong);transform:skewX(-14deg);
+}
+.site-brand-wordmark strong{font-size:15px;font-weight:950;font-style:italic;white-space:nowrap}
+.site-brand-wordmark strong b{color:var(--pink-ink);background:linear-gradient(135deg,#ff8956,var(--pink));background-clip:text;-webkit-text-fill-color:transparent}
+.site-header #logo .site-brand-wordmark small{margin:0;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.09em}
+.site-header.is-collapsed .primary-navigation{z-index:2}
+@media(max-width:700px){
+ .site-header #logo{gap:5px}
+ .site-brand-wing{width:29px}
+ .site-header #logo .site-brand-wordmark{padding-left:5px;gap:2px}
+ .site-brand-wordmark strong{font-size:12px}
+ .site-header #logo .site-brand-wordmark small{font-size:9px}
+ .site-header:not(.is-collapsed):not(.is-measuring) .primary-navigation{display:none}
+}
+
+/* Capsule indicators share the same shape in horizontal and collapsed menus. */
+.site-header #primaryNavigation .selection-pill{border-radius:999px;transition:transform .22s ease,width .22s ease,height .22s ease,opacity .18s ease}
+.site-header #primaryNavigation .selection-pill-track{overflow:visible}
+.site-header #primaryNavigation .nav-link,
+.site-header #primaryNavigation .nav-dropdown>button{position:relative}
+.site-header #primaryNavigation .nav-link::after,
+.site-header #primaryNavigation .nav-dropdown>button::after{
+ content:"";display:block;position:absolute;left:6px;right:auto;top:auto;bottom:1px;
+ width:calc(100% - 12px);height:3px;border-radius:999px;background:var(--accent);
+ opacity:0;transform:scaleX(.2);transform-origin:center;pointer-events:none;
+ transition:opacity .2s ease,transform .24s ease;
+}
+.site-header #primaryNavigation.sliding-indicator .nav-link.active::after{display:none}
+.site-header.is-collapsed #primaryNavigation .nav-link::after,
+.site-header #primaryNavigation .nav-dropdown>button::after{
+ left:12px;right:auto;top:auto;bottom:5px;width:48px;height:3px;transform-origin:left center;
+}
+.site-header #primaryNavigation .nav-link:focus-visible::after,
+.site-header #primaryNavigation .nav-dropdown>button:focus-visible::after{opacity:1;transform:scaleX(1)}
+@media(hover:hover){
+ .site-header #primaryNavigation .nav-link:hover::after,
+ .site-header #primaryNavigation .nav-dropdown>button:hover::after{opacity:1;transform:scaleX(1)}
+}
+@media(prefers-reduced-motion:reduce){
+ .site-header #primaryNavigation .selection-pill,
+ .site-header #primaryNavigation .nav-link::after,
+ .site-header #primaryNavigation .nav-dropdown>button::after{transition:none}
+}
+
+/* Menu labels use the same bold italic treatment in both orientations. */
+.site-header #primaryNavigation .nav-link,
+.site-header #primaryNavigation .nav-dropdown>button,
+.site-header #primaryNavigation .nav-dropdown>button strong{font-weight:800;font-style:italic}
+.site-header #primaryNavigation .nav-dropdown>button small{font-weight:400;font-style:normal}

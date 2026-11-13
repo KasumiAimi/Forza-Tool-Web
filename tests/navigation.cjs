@@ -14,14 +14,14 @@ const {openHeader,headerRoute}=require('./header-helpers.cjs');
  assert.equal(await page.locator('.discover-section .text-link').getAttribute('data-route'),'liveryCenter');
  assert.equal(await page.locator('#homeTab-saved').count(),0);
  assert.equal(await page.locator('#homeDriverName,.reference-profile-stats,.reference-rail-saved,.reference-explore').count(),0);assert.equal(await page.getByRole('heading',{name:'个人收藏更新',exact:true}).count(),1);
- await page.locator('#homeTab-tunings').click();await page.locator('#homeCars [data-car]').first().click();await page.locator('#collectCar').click();await page.locator('#logo').click();
+ await page.locator('#homeTab-tunings').click();await page.locator('#homeCars [data-garage-car]').first().click();await page.locator('#collectCar').click();await page.locator('#logo').click();
  await page.locator('.favorite-link').click();assert.equal(await page.locator('#subcontent .vehicle').count(),1);
  await page.locator('#subcontent [data-car]').click();await page.locator('#collectCar').click();await page.locator('#logo').click();await page.locator('.favorite-link').click();assert.equal(await page.locator('#subcontent .vehicle').count(),0);await page.locator('#logo').click();
  assert.equal(await page.locator('.discover-section .text-link').getAttribute('data-route'),'carRecommendation');
  for(const [width,height] of [[1280,720],[1366,768],[1440,900],[1920,1080]]){
   await page.setViewportSize({width,height});
   const featureBox=await page.locator('.reference-feature-row').boundingBox(),discoverBox=await page.locator('.discover-section').boundingBox();assert(featureBox.height>=380,'photo area over-compressed');assert(discoverBox.y-featureBox.y-featureBox.height>=28,'section spacing too tight');
-  const imageBox=await page.locator('#homeCars .vehicle-image').first().boundingBox(),infoBox=await page.locator('#homeCars .vehicle-info').first().boundingBox();assert(infoBox.y>=imageBox.y+imageBox.height-1,'vehicle card must use a vertical layout');
+  assert(await page.locator('#homeCars .garage-row').first().locator('.garage-car').count()>1,'vehicles share a garage row');
   const titleBox=await page.locator('.discover-section h2').boundingBox(),tabsBox=await page.locator('.reference-discover-tabs').boundingBox();assert(Math.abs(titleBox.y-tabsBox.y)<15,'recommendation title and tabs must share a row');
   await page.screenshot({path:path.join(__dirname,`首页-紧凑布局-${width}.png`),fullPage:false});
  }
@@ -35,9 +35,9 @@ const {openHeader,headerRoute}=require('./header-helpers.cjs');
  for(const name of ['全车辆库','涂装中心','赛事中心','游戏攻略']){
   await nav.getByRole('button',{name,exact:true}).click();assert.equal(await page.locator('#pageTitle').textContent(),name);
  }
- for(const [entry,modeText] of [['online','线上竞速'],['all','漂移/直线加速']]){
+ for(const [entry,modeText] of [['online','线上竞速'],['all','漂移 / 直线加速']]){
   await tuning.click();await nav.locator(`[data-tuning-mode="${entry}"]`).click();
-  assert.equal(await page.locator('.web-modebar .tabs .active').textContent(),modeText);
+  assert.equal(await page.locator('.garage-modes .active').textContent(),modeText);
   assert.equal(await nav.locator('.nav-toggle[aria-expanded="true"]').count(),0);
  }
  for(const [route,title] of [['blueprintRecommendation','蓝图推荐'],['weeklyPhotos','玩家相册'],['ranking','创作者排行榜'],['gameGuide','游戏攻略']]){

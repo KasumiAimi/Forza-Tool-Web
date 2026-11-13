@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1340 752" fill="none">
+  <!-- The rear contact is higher than the front contact in the official three-quarter cutouts. -->
+  <defs>
+    <filter id="body" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="10"/></filter>
+    <filter id="contact" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur stdDeviation="2.5"/></filter>
+  </defs>
+  <path d="M200 552C300 535 460 553 620 591L1130 612C1230 623 1250 643 1135 660L760 680C650 664 430 617 224 581C180 572 172 561 200 552Z" fill="#000" opacity=".66" filter="url(#body)"/>
+  <g fill="#000" filter="url(#contact)">
+    <ellipse cx="271" cy="568" rx="57" ry="7" opacity=".95"/>
+    <ellipse cx="733" cy="655" rx="72" ry="8" opacity=".98"/>
+    <ellipse cx="1115" cy="638" rx="66" ry="6" opacity=".55"/>
+  </g>
+</svg>
