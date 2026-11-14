@@ -22,7 +22,7 @@
 .vehicle-screen-emblem{display:grid;place-items:center;flex:none;width:43px;height:43px;border:2px solid var(--detail-divider);border-radius:50%;font-size:18px;font-style:italic;background:var(--detail-mark-bg)}
 .vehicle-detail-screen .vehicle-masthead-copy>.eyebrow,.vehicle-detail-screen .masthead-meta,.vehicle-detail-screen .vehicle-masthead-copy>small{display:none}
 .vehicle-detail-screen .vehicle-masthead-copy h2{margin:15px 0 14px;font-size:clamp(23px,2.1vw,34px);font-weight:900;font-style:italic;line-height:1.08;letter-spacing:-.035em;color:var(--detail-ink);overflow-wrap:anywhere;text-shadow:0 1px 0 #fff6}
-.vehicle-detail-screen .save-button{position:static;display:inline-flex;margin:0;padding:6px 9px;border:1px solid var(--detail-divider);border-radius:3px;background:var(--detail-mark-bg);color:var(--detail-secondary);font-size:10px}
+.vehicle-detail-screen .save-button{position:static;display:inline-flex;gap:.3em;margin:0;padding:6px 9px;border:1px solid var(--detail-divider);border-radius:3px;background:var(--detail-mark-bg);color:var(--detail-secondary);font-size:10px}
 .vehicle-detail-screen .save-button.saved{background:#fff;color:#a72541;border-color:#fff}
 .vehicle-detail-screen .spec-card{position:relative;margin:20px 0 0;padding:19px 0 0;border:0;border-radius:0;background:transparent;color:var(--detail-secondary)}
 .vehicle-detail-screen .spec-card h3,.vehicle-detail-screen .spec-card>p{display:none}
@@ -67,7 +67,52 @@
 .vehicle-screen-right .tune .tags{gap:6px}
 .vehicle-screen-right .tune .tags>b,.vehicle-screen-right .tune .tags>span{font-size:10px;padding:4px 7px}
 .vehicle-screen-right .like{color:var(--workshop-muted);flex:none;white-space:nowrap}
-.vehicle-screen-right .like.liked{color:var(--workshop-accent)}
+.vehicle-screen-right .like.liked{color:var(--reaction-heart)}
+.reaction-icon,.reaction-icon>span:first-child{display:inline-block}
+.reaction-icon{position:relative}
+.reaction-burst,.reaction-burst>i{position:absolute;inset:50% auto auto 50%;pointer-events:none}
+.reaction-burst{z-index:2}
+@media(prefers-reduced-motion:no-preference){
+ .reaction-icon:has(.reaction-burst)>span:first-child{animation:reaction-pop 420ms ease-out}
+ .reaction-burst{animation:reaction-lifetime 580ms linear both}
+ .reaction-burst>i{display:block;border-radius:999px}
+ .reaction-ring{
+  width:18px;height:18px;margin:-9px 0 0 -9px;border:2px solid var(--reaction-gold);
+  animation:reaction-ring 420ms cubic-bezier(.17,.8,.25,1) both;
+ }
+ .reaction-ray{
+  width:9px;height:2px;margin-top:-1px;transform-origin:left center;background:var(--reaction-gold);
+  animation:reaction-ray 510ms cubic-bezier(.18,.65,.36,1) both;
+ }
+ .reaction-ray:nth-child(4n){background:var(--reaction-mint)}
+ .reaction-dot{
+  width:4px;height:4px;margin:-2px 0 0 -2px;background:var(--reaction-coral);
+  animation:reaction-dot 580ms cubic-bezier(.18,.65,.36,1) both;
+ }
+ .reaction-dot:nth-child(4n+1){background:var(--reaction-blue)}
+}
+@keyframes reaction-pop{
+ 0%{transform:scale(.7)}
+ 34%{transform:scale(1.38)}
+ 57%{transform:scale(.93)}
+ 77%{transform:scale(1.08)}
+ 100%{transform:scale(1)}
+}
+@keyframes reaction-lifetime{0%,99%{opacity:1}100%{opacity:0}}
+@keyframes reaction-ring{
+ from{transform:scale(.55);opacity:.9}
+ to{transform:scale(2.3);opacity:0}
+}
+@keyframes reaction-ray{
+ 0%{transform:rotate(var(--ray-angle)) translateX(9px) scaleX(.75);opacity:1}
+ 30%{opacity:1}
+ 100%{transform:rotate(var(--ray-angle)) translateX(27px) scaleX(.12);opacity:0}
+}
+@keyframes reaction-dot{
+ 0%{transform:translate(calc(var(--dot-x) * .32),calc(var(--dot-y) * .32));opacity:1}
+ 34%{opacity:.95}
+ 100%{transform:translate(var(--dot-x),var(--dot-y)) scale(.55);opacity:0}
+}
 .vehicle-screen-right .tuner-row{margin:18px 0 13px;align-items:center;gap:10px;flex-wrap:wrap}
 .vehicle-screen-right .tuner-profile{color:var(--workshop-ink);gap:10px}
 .vehicle-screen-right .tuner-profile strong{font-size:15px;color:var(--workshop-ink)}
