@@ -46,7 +46,10 @@ const garageOfficialImages={
 const garageImage=car=>'assets/official-cars/'+(car.officialImage||garageOfficialImages[car._id]);
 function garageEffectiveColumns(){return innerWidth<=520?1:innerWidth<=800?2:innerWidth<=1100?3:innerWidth<=1320?4:garageColumns;}
 function garageOption(value,label,current){return `<option value="${esc(value)}" ${current===value?'selected':''}>${esc(label)}</option>`;}
-function garageSelect(key,label,values,allLabel){return `<label class="garage-control"><span>${label}</span><select data-garage-filter="${key}" aria-label="${label}">${garageOption('',allLabel,filters[key])}${values.map(value=>garageOption(value,value,filters[key])).join('')}</select></label>`;}
+function garageFilterOptions(key,values,allLabel){
+ return garageOption('',allLabel,filters[key])+values.map(value=>garageOption(value,value,filters[key])).join('');
+}
+function garageSelect(key,label,values,allLabel){return `<label class="garage-control"><span>${label}</span><select data-garage-filter="${key}" aria-label="${label}">${garageFilterOptions(key,values,allLabel)}</select></label>`;}
 function garageCard(car,tier,matches=car.tuningData.filter(t=>tuneMatches(t)&&t.tier===tier)){
  const tune=matches[0];
  return `<button class="garage-car" type="button" data-garage-car="${car._id}" data-tier="${esc(tier)}" aria-label="查看 ${esc(car.brand+' '+car.name)} 的${esc(tier)}调校">
@@ -58,8 +61,10 @@ function garageCard(car,tier,matches=car.tuningData.filter(t=>tuneMatches(t)&&t.
 function renderGarageRow(rowCars,tier,rowSize,count,selectTunes){
  return `<div class="garage-row" style="--row-columns:${rowSize}"><div class="garage-ceiling-lights" aria-hidden="true">${rowCars.map(()=>'<span class="garage-ceiling-light"></span>').join('')}</div>${count}${rowCars.map(car=>garageCard(car,tier,selectTunes?.(car))).join('')}</div>`;
 }
-function renderGarageTuning(){
- const matching=sortVehicles(garageAllCars.filter(car=>(!filters.brand||car.brand===filters.brand)&&car.tuningData.some(tuneMatches)&&matchesVehicleText(car,vehicleQuery)));
+function matchingGarageCars(){
+ return sortVehicles(garageAllCars.filter(car=>(!filters.brand||car.brand===filters.brand)&&car.tuningData.some(tuneMatches)&&matchesVehicleText(car,vehicleQuery)));
+}
+function garageResults(matching){
  const sections=tiers.map(tier=>{
   const list=matching.filter(car=>car.tuningData.some(t=>tuneMatches(t)&&t.tier===tier));
   if(!list.length)return '';
@@ -73,20 +78,54 @@ function renderGarageTuning(){
   }
   return `<section class="garage-tier" data-tier="${esc(tier)}" id="garage-tier-${encodeURIComponent(tier)}" aria-label="${esc(title)} · ${list.length} 辆"><div class="garage-grid" data-columns="${garageColumns}">${rows.join('')}</div></section>`;
  }).join('');
+ return sections||`<div class="garage-empty"><h2>没有找到匹配的调校</h2><p>试试更换关键词或清空筛选。</p><button type="button" id="resetVehicleFilters">清空搜索与筛选</button></div>`;
+}
+function renderGarageTuning(){
+ const matching=matchingGarageCars();
  $('#subcontent').innerHTML=`<div class="garage-page">
   <div class="garage-intro"><div><span class="garage-kicker">车库调校库 · 演示数据</span><h1>全调校库</h1><p>先选用途，再找车辆。沿着梯队浏览适合下一场比赛的调校。</p></div></div>
   <section class="garage-filter-hud" aria-label="调校筛选"><div class="garage-hud-main"><div class="garage-modes" aria-label="推荐模式"><button type="button" data-mode="online" class="${mode==='online'?'active':''}" aria-pressed="${mode==='online'}">线上竞速</button><button type="button" data-mode="all" class="${mode==='all'?'active':''}" aria-pressed="${mode==='all'}">漂移 / 直线加速</button></div><label class="garage-control garage-search"><span>搜索车辆、品牌或调校师</span><input id="garageSearch" type="search" value="${esc(vehicleQuery)}" placeholder="如 BMW、GT-R、Demo Apex" maxlength="100"></label><span class="garage-count" role="status">${matching.length} 辆匹配车辆</span></div>
   <div class="garage-hud-filters"><div class="garage-control garage-brand"><span>车厂品牌</span><button type="button" id="openBrand">${esc(filters.brand||'全部车厂')} <span aria-hidden="true">⌄</span></button></div>${garageSelect('level','车辆等级',modeOptions().levels,'全部等级')}${garageSelect('scenario','使用场景',scenarios(),'全部场景')}${garageSelect('driveType','驱动形式',modeOptions().drives,'全部驱动')}<label class="garage-control"><span>排序</span><select id="garageSort" aria-label="排序">${[['default','默认顺序'],['name','品牌 / 名称'],['level','车辆等级'],['tunes','调校数量']].map(([key,name])=>garageOption(key,name,vehicleSort)).join('')}</select></label><button type="button" class="garage-clear" id="garageClear">清空筛选</button></div></section>
   <div class="garage-view-controls"><p>官方车辆图片 · 调校和车辆参数仍为本地演示数据</p><div role="group" aria-label="每行车辆数量"><span>每行</span><button type="button" data-garage-columns="4" aria-pressed="${garageColumns===4}">4 辆</button><button type="button" data-garage-columns="5" aria-pressed="${garageColumns===5}">5 辆</button></div></div>
-  <nav class="garage-shortcuts" aria-label="梯队快速定位"><span>跳至梯队</span>${tiers.map(tier=>`<button type="button" data-garage-jump="${esc(tier)}">${esc(tier)}</button>`).join('')}</nav><div class="garage-results">${sections||`<div class="garage-empty"><h2>没有找到匹配的调校</h2><p>试试更换关键词或清空筛选。</p><button type="button" id="resetVehicleFilters">清空搜索与筛选</button></div>`}</div>
+  <nav class="garage-shortcuts" aria-label="梯队快速定位"><span>跳至梯队</span>${tiers.map(tier=>`<button type="button" data-garage-jump="${esc(tier)}">${esc(tier)}</button>`).join('')}</nav><div class="garage-results">${garageResults(matching)}</div>
  </div>`;
+ const count=$('.garage-count'),results=$('.garage-results');
+ function updateResults(){
+  const matching=matchingGarageCars();
+  const status=`${matching.length} 辆匹配车辆`;
+  if(count.textContent!==status)count.textContent=status;
+  results.innerHTML=garageResults(matching);
+  syncVehicleHistory();
+ }
  $('#openBrand').onclick=openBrand;
- $('#garageSearch').oninput=event=>{if(event.isComposing)return;const start=event.target.selectionStart,end=event.target.selectionEnd;vehicleQuery=event.target.value;renderGarageTuning();syncVehicleHistory();const input=$('#garageSearch');input.focus();input.setSelectionRange(start,end);};
- $('#garageSearch').oncompositionend=event=>$('#garageSearch').oninput(event);
- document.querySelectorAll('[data-garage-filter]').forEach(select=>select.onchange=event=>{const key=event.target.dataset.garageFilter;filters[key]=event.target.value;if(key==='level'&&!scenarios().includes(filters.scenario))filters.scenario='';renderGarageTuning();syncVehicleHistory();$(`[data-garage-filter="${key}"]`).focus();});
- $('#garageSort').onchange=event=>{vehicleSort=event.target.value;renderGarageTuning();syncVehicleHistory();$('#garageSort').focus();};
- $('#garageClear').onclick=()=>{filters={brand:'',level:'',scenario:'',driveType:''};vehicleQuery='';vehicleSort='default';renderGarageTuning();syncVehicleHistory();};
- if($('#resetVehicleFilters'))$('#resetVehicleFilters').onclick=()=>{filters={brand:'',level:'',scenario:'',driveType:''};vehicleQuery='';vehicleSort='default';renderGarageTuning();syncVehicleHistory();};
+ const search=$('#garageSearch');
+ search.oninput=event=>{
+  if(event.isComposing||vehicleQuery===search.value)return;
+  vehicleQuery=search.value;
+  updateResults();
+ };
+ search.oncompositionend=search.oninput;
+ document.querySelectorAll('[data-garage-filter]').forEach(select=>select.onchange=()=>{
+  const key=select.dataset.garageFilter;
+  filters[key]=select.value;
+  if(key==='level'){
+   const allowed=scenarios();
+   if(!allowed.includes(filters.scenario))filters.scenario='';
+   $('[data-garage-filter="scenario"]').innerHTML=garageFilterOptions('scenario',allowed,'全部场景');
+  }
+  updateResults();
+ });
+ const sort=$('#garageSort');
+ sort.onchange=()=>{vehicleSort=sort.value;updateResults();};
+ function resetFilters(){
+  filters={brand:'',level:'',scenario:'',driveType:''};
+  vehicleQuery='';
+  vehicleSort='default';
+  renderGarageTuning();
+  syncVehicleHistory();
+ }
+ $('#garageClear').onclick=resetFilters;
+ results.onclick=event=>{if(event.target.closest('#resetVehicleFilters'))resetFilters();};
 }
 document.addEventListener('click',event=>{
  const carButton=event.target.closest('[data-garage-car]');

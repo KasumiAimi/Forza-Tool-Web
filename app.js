@@ -33,13 +33,67 @@ const modeOptions = () => ({ levels: mode === 'online' ? ['R', 'S2', 'S1', 'A', 
 function scenarios() { let a = modeOptions().scenarios; if (mode === 'online' && ['R', 'S2'].includes(filters.level)) return ['公路']; if (mode === 'online' && filters.level === 'C') return ['公路', '拉力']; return a; }
 function notify(t) { $('#toast').textContent = t; $('#toast').style.display = 'block'; clearTimeout(notify.timer); notify.timer = setTimeout(() => $('#toast').style.display = 'none', 2200) }
 function saveCollect() { writeLocalValue('horizon_web_v2_collected', [...collected]) }
+function vehicleLikeButton(tune) {
+    const active = liked.has(tune.tuningId);
+    const count = tune.likes + Number(active);
+    return `<button type="button" class="like ${active ? 'liked' : ''}" data-like="${esc(tune.tuningId)}" aria-pressed="${active}" aria-label="调校点赞，${count} 个赞"><span class="reaction-icon" aria-hidden="true"><span>${active ? '♥' : '♡'}</span></span> <span data-like-count aria-hidden="true">${count}</span></button>`;
+}
+function vehicleFavoriteButton(car, className, showLabel = false) {
+    const saved = collected.has(car._id);
+    const label = showLabel ? ` <span data-favorite-label>${saved ? '已收藏' : '收藏车辆'}</span>` : '';
+    return `<button type="button" id="collectCar" class="${className}${saved ? ' saved' : ''}" aria-label="${saved ? '取消收藏' : '收藏车辆'}"><span class="reaction-icon" aria-hidden="true"><span>${saved ? '★' : '☆'}</span></span>${label}</button>`;
+}
+function toggleVehicleLike(button) {
+    const id = button.dataset.like;
+    const active = !liked.has(id);
+    if (active) liked.add(id);
+    else liked.delete(id);
+    const count = button.querySelector('[data-like-count]');
+    count.textContent = Number(count.textContent) + (active ? 1 : -1);
+    button.classList.toggle('liked', active);
+    button.setAttribute('aria-pressed', active);
+    button.setAttribute('aria-label', `调校点赞，${count.textContent} 个赞`);
+    updateVehicleReaction(button, active, active ? '♥' : '♡');
+}
+function toggleVehicleFavorite(button, carId) {
+    const active = !collected.has(carId);
+    if (active) collected.add(carId);
+    else collected.delete(carId);
+    saveCollect();
+    button.classList.toggle('saved', active);
+    button.setAttribute('aria-label', active ? '取消收藏' : '收藏车辆');
+    const label = button.querySelector('[data-favorite-label]');
+    if (label) label.textContent = active ? '已收藏' : '收藏车辆';
+    updateVehicleReaction(button, active, active ? '★' : '☆');
+}
+function updateVehicleReaction(button, active, symbol) {
+    const icon = button.querySelector('.reaction-icon');
+    icon.firstElementChild.textContent = symbol;
+    icon.querySelector('.reaction-burst')?.remove();
+    if (!active || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const burst = document.createElement('span');
+    burst.className = 'reaction-burst';
+    const particles = Array.from({length: 10}, (_, index) => {
+        const rayAngle = index * 36;
+        const dotAngle = (rayAngle + 18) * Math.PI / 180;
+        return `<i class="reaction-ray" style="--ray-angle:${rayAngle}deg"></i><i class="reaction-dot" style="--dot-x:${(Math.cos(dotAngle) * 34).toFixed(1)}px;--dot-y:${(Math.sin(dotAngle) * 22).toFixed(1)}px"></i>`;
+    });
+    burst.innerHTML = `<i class="reaction-ring"></i>${particles.join('')}`;
+    const removeBurst = event => {
+        if (event.target === burst) burst.remove();
+    };
+    burst.addEventListener('animationend', removeBurst);
+    burst.addEventListener('animationcancel', removeBurst);
+    icon.append(burst);
+}
 async function copy(t) { try { await navigator.clipboard.writeText(t); notify('已复制：' + t) } catch { notify('浏览器未允许复制') } }
 function updateNick() { $('#drawerName').innerHTML = esc(nick) + ' <small>✎</small>'; $('#nickDisplay').textContent = nick; }
 function drawer(open) { $('#drawer').classList.toggle('open', open); $('#drawer').inert = !open; $('#backdrop').classList.toggle('hidden', !open); document.body.style.overflow = open ? 'hidden' : ''; if (open) $('#closeDrawer').focus(); else $('#logo').focus() }
 function editName() { drawer(false); $('#nameInput').value = nick; $('#nickname').showModal(); $('#nameInput').focus() }
 
 $('#nameForm').onsubmit = e => { e.preventDefault(); const n = $('#nameInput').value.trim(); if (!n) return; nick = n; try { localStorage.setItem('horizon_web_v2_nickname', n) } catch { notify('浏览器无法保存代号，本次页面内有效') }; updateNick(); $('#nickname').close(); notify('代号更新成功') };
-document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => b.closest('dialog').close()); document.addEventListener('keydown', e => { if (e.key === 'Escape') drawer(false) }); $('#copyContact').onclick = () => copy('KMTTB'); $('#poster').onclick = () => $('#photo').showModal(); $('#feedback').onclick = () => navigate('feedback');
+document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => b.closest('dialog').close()); document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#drawer').classList.contains('open')) drawer(false) }); $('#copyContact').onclick = () => copy('KMTTB'); $('#poster').onclick = () => $('#photo').showModal(); $('#feedback').onclick = () => navigate('feedback');
 const _navHooksBefore = [], _navHooksAfter = [];
 function onBeforeNavigate(fn) { _navHooksBefore.push(fn); }
 function onAfterNavigate(fn) { _navHooksAfter.push(fn); }
@@ -52,7 +106,7 @@ function renderTuning() { renderGarageTuning(); }
 function openBrand() { $('#brandSearch').value = ''; renderBrands(''); $('#brands').showModal() }
 function renderBrands(q) { const brands = [...new Set(cars.filter(c => c.tuningData.some(t => mode === 'online' ? t.online : ['漂移', '直线加速'].includes(t.scenario))).map(c => c.brand))].sort(); $('#brandList').innerHTML = `<button data-brand="">全部车厂 ${!filters.brand ? '✓' : ''}</button>` + brands.filter(b => b.toLowerCase().includes(q.toLowerCase())).map(b => `<button data-brand="${b}">${b} ${filters.brand === b ? '✓' : '›'}</button>`).join(''); }
 $('#brandSearch').oninput = e => renderBrands(e.target.value);
-function renderDetail() { const c = detailCar; if (!c) { navigate('carRecommendation'); return } const matched = c.tuningData.filter(t => tuneMatches(t) && (!detailTier || t.tier === detailTier)); const list = detailOrigin === 'carRecommendation' && !showAll ? matched : c.tuningData; $('#subcontent').innerHTML = `<div class="detail-layout"><section class="detail-visual"><div class="detail-rank level-${c.level}">${c.level}</div><img src="assets/cars/${c.image}" alt="${esc(c.name)} 演示配图"><button class="collect-circle ${collected.has(c._id) ? 'saved' : ''}" id="collectCar" aria-label="${collected.has(c._id) ? '取消收藏' : '收藏车辆'}">${collected.has(c._id) ? '★' : '☆'}</button><div class="detail-name"><small>${c.brand}</small><h2>${c.name}</h2></div><div class="spec-card"><h3>基本信息</h3><dl>${[['品牌', c.brand], ['国家', c.country], ['类别', c.category], ['驱动', c.driveType], ['获取方式', c.obtainMethod]].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl></div><p class="demo-disclaimer">演示数据与配图，仅用于布局和操作预览。</p></section><section><div class="detail-heading"><h2>调校推荐</h2>${detailOrigin === 'carRecommendation' && matched.length < c.tuningData.length ? `<button id="showAll">${showAll ? '仅看匹配' : '全部调校'} ${showAll ? matched.length : c.tuningData.length} ›</button>` : ''}</div>${list.map(t => `<article class="tune"><div class="tune-top"><div class="tags"><b class="tier-chip">${t.tier}</b><b class="level-${t.level}">${t.level}</b>${t.online ? '<span class="online">线上</span>' : ''}</div><button class="like ${liked.has(t.tuningId) ? 'liked' : ''}" data-like="${t.tuningId}">${liked.has(t.tuningId) ? '♥' : '♡'} ${t.likes + (liked.has(t.tuningId) ? 1 : 0)}</button></div><div class="tags tune-tags"><span>${t.scenario}</span><span>${t.driveType}</span><span>${t.tireType}</span></div><div class="tuner-row"><button class="tuner-profile" data-tuner="${t.tuner}"><small>调校师</small><strong>${t.tuner}</strong><span>主页 ›</span></button><button class="copy-tuner" data-copy="${t.tuner}">复制调校师ID</button></div><p class="tune-desc"><span>简评：</span>${t.description}</p></article>`).join('') || '<p>暂无调校推荐，敬请期待</p>'}<section class="description"><h3>车辆描述</h3><p>${c.description}</p></section></section></div>`; $('#collectCar').onclick = () => { collected.has(c._id) ? collected.delete(c._id) : collected.add(c._id); saveCollect(); renderDetail() }; if ($('#showAll')) $('#showAll').onclick = () => { showAll = !showAll; renderDetail() }; }
+function renderDetail() { const c = detailCar; if (!c) { navigate('carRecommendation'); return } const matched = c.tuningData.filter(t => tuneMatches(t) && (!detailTier || t.tier === detailTier)); const list = detailOrigin === 'carRecommendation' && !showAll ? matched : c.tuningData; $('#subcontent').innerHTML = `<div class="detail-layout"><section class="detail-visual"><div class="detail-rank level-${c.level}">${c.level}</div><img src="assets/cars/${c.image}" alt="${esc(c.name)} 演示配图">${vehicleFavoriteButton(c,'collect-circle')}<div class="detail-name"><small>${c.brand}</small><h2>${c.name}</h2></div><div class="spec-card"><h3>基本信息</h3><dl>${[['品牌', c.brand], ['国家', c.country], ['类别', c.category], ['驱动', c.driveType], ['获取方式', c.obtainMethod]].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl></div><p class="demo-disclaimer">演示数据与配图，仅用于布局和操作预览。</p></section><section><div class="detail-heading"><h2>调校推荐</h2>${detailOrigin === 'carRecommendation' && matched.length < c.tuningData.length ? `<button id="showAll">${showAll ? '仅看匹配' : '全部调校'} ${showAll ? matched.length : c.tuningData.length} ›</button>` : ''}</div>${list.map(t => `<article class="tune"><div class="tune-top"><div class="tags"><b class="tier-chip">${t.tier}</b><b class="level-${t.level}">${t.level}</b>${t.online ? '<span class="online">线上</span>' : ''}</div>${vehicleLikeButton(t)}</div><div class="tags tune-tags"><span>${t.scenario}</span><span>${t.driveType}</span><span>${t.tireType}</span></div><div class="tuner-row"><button class="tuner-profile" data-tuner="${t.tuner}"><small>调校师</small><strong>${t.tuner}</strong><span>主页 ›</span></button><button class="copy-tuner" data-copy="${t.tuner}">复制调校师ID</button></div><p class="tune-desc"><span>简评：</span>${t.description}</p></article>`).join('') || '<p>暂无调校推荐，敬请期待</p>'}<section class="description"><h3>车辆描述</h3><p>${c.description}</p></section></section></div>`; $('#collectCar').onclick = event => toggleVehicleFavorite(event.currentTarget, c._id); if ($('#showAll')) $('#showAll').onclick = () => { showAll = !showAll; renderDetail() }; }
 let libraryQuery = '', renderLibrary;
 function render() {
     if (currentRoute === 'carRecommendation') renderTuning();
@@ -76,7 +130,7 @@ document.addEventListener('click', e => {
     const b = e.target.closest('[data-brand]'); if (b) { filters.brand = b.dataset.brand; $('#brands').close(); render(); return }
     const c = e.target.closest('[data-car]'); if (c) { detailCar = cars.find(x => x._id === c.dataset.car); detailOrigin = currentRoute; detailTier = c.dataset.tier || ''; showAll = false; navigate('carDetail'); return }
     const cp = e.target.closest('[data-copy]'); if (cp) { copy(cp.dataset.copy); return }
-    const lk = e.target.closest('[data-like]'); if (lk) { liked.has(lk.dataset.like) ? liked.delete(lk.dataset.like) : liked.add(lk.dataset.like); renderDetail(); return }
+    const lk = e.target.closest('[data-like]'); if (lk) { toggleVehicleLike(lk); return }
     const tu = e.target.closest('[data-tuner]'); if (tu) { render.tuner = tu.dataset.tuner; navigate('tunerProfile'); return }
     const ph = e.target.closest('[data-photo]'); if (ph) { $('#photo img').src = ph.dataset.photo; $('#photo p').textContent = '演示车辆配图'; $('#photo').showModal() }
 });

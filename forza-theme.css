@@ -9,6 +9,8 @@
  --gold-ink:#f5d489;--gold-bg:#4b3e22;--gold-border:#8e7946;
  --garage-hud-bg:rgba(9,22,31,.9);--garage-hud-ink:#f3f7f8;--garage-hud-muted:#b7c6cb;--garage-hud-border:rgba(185,216,225,.22);
  --garage-control-bg:rgba(20,39,49,.88);--garage-control-border:rgba(177,214,224,.25);--garage-image-wash:rgba(3,12,19,.2);--garage-accent:#ee5c9a;
+ --garage-picker-hover:#34304a;--garage-picker-selected:#4a293e;
+ --reaction-heart:#ffa696;--reaction-coral:#ff937e;--reaction-gold:#ffdb70;--reaction-mint:#8ce7cf;--reaction-blue:#9fc5ff;
  --garage-name-bg:rgba(62,72,79,.58);--garage-name-border:rgba(226,237,241,.26);--garage-car-ink:#f4f8fa;--garage-row-wash:rgba(3,12,19,.14);
  --detail-ink:#293238;--detail-secondary:#354148;--detail-muted:#667078;--detail-divider:#5a544647;--detail-mark-bg:#ffffff66;--detail-row:#63112438;--detail-accent:#fff;--detail-accent-ink:#df164b;
  --screen-face-high:#fff8e6;--screen-face-low:#edcf91;--screen-amber:#b67a35;--screen-bloom:#ffe0a52e;
@@ -30,6 +32,8 @@
  --gold-ink:#6e5016;--gold-bg:#fbf0cf;--gold-border:#bd9a4a;
  --garage-hud-bg:rgba(248,251,250,.94);--garage-hud-ink:#1a2b31;--garage-hud-muted:#52646b;--garage-hud-border:rgba(68,105,117,.25);
  --garage-control-bg:rgba(232,241,240,.94);--garage-control-border:rgba(61,101,112,.3);--garage-image-wash:rgba(226,237,236,.52);--garage-accent:#b72367;
+ --garage-picker-hover:#eeeaf6;--garage-picker-selected:#f6e1ec;
+ --reaction-heart:#a13138;--reaction-coral:#c14449;--reaction-gold:#9c5d0c;--reaction-mint:#177e69;--reaction-blue:#315ebf;
  --garage-name-bg:rgba(48,59,67,.68);--garage-name-border:rgba(239,247,249,.32);--garage-car-ink:#fff;--garage-row-wash:rgba(220,231,233,.25);
  --detail-ink:#293238;--detail-secondary:#354148;--detail-muted:#667078;--detail-divider:#5a544647;--detail-mark-bg:#ffffff66;--detail-row:#63112438;--detail-accent:#fff;--detail-accent-ink:#df164b;
  --screen-face-high:#fff9eb;--screen-face-low:#f1d598;--screen-amber:#b67a35;--screen-bloom:#ebc16a1f;
